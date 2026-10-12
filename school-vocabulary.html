@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My School — школьная лексика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#fffef9; --grid:#d9e8f6; --ink:#233044; --dim:#66738a; --line:#dfe6f2;
+    --board:#1f4d3d; --chalk:#f6f3ea; --wood:#b88246;
+    --blue:#2d5bd6; --blue-soft:#e4ecff; --green:#2ea36b; --green-soft:#dcf5e8;
+    --purple:#7a4fd8; --purple-soft:#ece5ff; --orange:#f28c28; --orange-soft:#ffe9d1;
+    --red:#e4473b; --red-soft:#ffe2df; --pink:#e4579a; --yellow:#ffe56b; --yellow-soft:#fff6c9;
+    --ok:#1f9d63; --bad:#e04a5a;
+    --acc:var(--ink); --soft:#eef1f7;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; font-family:'Fira Sans',sans-serif; color:var(--ink); min-height:100vh; padding-bottom:50px;
+    background-color:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:26px 26px;}
+  h1,h2,h3,.hand{font-family:'Caveat',cursive;}
+
+  /* ===== chalkboard hero ===== */
+  .hero{padding:16px 12px 8px;}
+  .board{max-width:880px; margin:0 auto; text-align:center; color:var(--chalk); padding:20px 16px 18px;
+    background:radial-gradient(ellipse at 30% 20%,#2c6652,#1f4d3d 60%,#163b2e);
+    border:10px solid var(--wood); border-radius:14px; box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 7px 0 #8d6232;}
+  .chalk-row{display:flex; justify-content:center; gap:14px; font-size:clamp(26px,6vw,38px); margin-bottom:4px;}
+  .chalk-row span{display:inline-block; animation:bob 3s ease-in-out infinite;}
+  .chalk-row span:nth-child(2){animation-delay:.4s;} .chalk-row span:nth-child(3){animation-delay:.8s;}
+  .chalk-row span:nth-child(4){animation-delay:1.2s;} .chalk-row span:nth-child(5){animation-delay:1.6s;}
+  .chalk-row .bell{transform-origin:50% 0; animation:ring 2.4s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+  @keyframes ring{0%,100%{transform:rotate(0);}10%{transform:rotate(16deg);}20%{transform:rotate(-14deg);}30%{transform:rotate(9deg);}40%{transform:rotate(-6deg);}50%{transform:rotate(0);}}
+  .board h1{margin:0; font-size:clamp(38px,9vw,64px); line-height:1; text-shadow:0 0 2px rgba(255,255,255,.5);}
+  .board p{margin:8px auto 0; max-width:560px; font-size:15px; line-height:1.55; color:#d6e7dd;}
+
+  /* ===== tabs ===== */
+  nav.tabs{position:sticky; top:0; z-index:20; background:rgba(255,254,249,.96); backdrop-filter:blur(6px);
+    border-bottom:2px solid var(--line); padding:9px 10px; overflow-x:auto; white-space:nowrap;}
+  nav.tabs::-webkit-scrollbar{height:5px;} nav.tabs::-webkit-scrollbar-thumb{background:#cdd6ea; border-radius:4px;}
+  .tab{display:inline-flex; align-items:center; gap:6px; background:#fff; border:2px solid var(--line); color:var(--dim);
+    font-family:'Fira Sans'; font-weight:600; font-size:14px; padding:8px 14px; border-radius:12px 12px 4px 4px; margin-right:6px; cursor:pointer; transition:.15s;}
+  .tab:hover{border-color:var(--c);}
+  .tab.on{background:var(--c); border-color:var(--c); color:#fff;}
+
+  main{max-width:880px; margin:0 auto; padding:20px 12px;}
+  .station{display:none; animation:fade .3s ease;} .station.on{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);}to{opacity:1; transform:none;}}
+  .t-start{--acc:var(--ink); --soft:#eef1f7;} .t-voc{--acc:var(--blue); --soft:var(--blue-soft);}
+  .t-gram{--acc:var(--purple); --soft:var(--purple-soft);} .t-train{--acc:var(--green); --soft:var(--green-soft);}
+  .t-room{--acc:var(--orange); --soft:var(--orange-soft);} .t-art{--acc:var(--red); --soft:var(--red-soft);}
+
+  .card{background:#fff; border:2px solid var(--ink); border-radius:16px; padding:18px 16px; margin-bottom:16px; box-shadow:5px 5px 0 rgba(35,48,68,.14);}
+  .card h2{margin:0 0 6px; font-size:34px; color:var(--acc); line-height:1.05;}
+  .card h3{margin:0 0 6px; font-size:26px; color:var(--ink); line-height:1.1;}
+  .card p{line-height:1.6; margin:6px 0;}
+  .hl{background:linear-gradient(transparent 58%,var(--yellow) 58%); padding:0 3px;}
+  .muted{color:var(--dim); font-size:14px;}
+  .badge{display:inline-block; background:var(--acc); color:#fff; font-weight:700; font-size:12px; padding:3px 12px; border-radius:999px; margin-bottom:8px; letter-spacing:.3px;}
+  .btn{background:var(--acc); color:#fff; border:none; border-radius:12px; padding:11px 20px; font-family:'Fira Sans'; font-weight:700; font-size:14.5px; cursor:pointer;}
+  .btn.ghost{background:#fff; color:var(--dim); border:2px solid var(--line);}
+  .btn.sm{padding:7px 14px; font-size:13px; border-radius:10px;}
+  .navb{display:flex; gap:10px; margin-top:4px;} .navb .btn{flex:1;}
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+
+  /* ===== start ===== */
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:10px;}
+  .step{border:2px solid var(--line); border-radius:14px; padding:12px; background:#fff; cursor:pointer; transition:.15s;}
+  .step:hover{border-color:var(--c); transform:translateY(-2px);}
+  .step .n{display:inline-flex; width:30px; height:30px; border-radius:50%; background:var(--c); color:#fff; font-weight:700; align-items:center; justify-content:center; margin-bottom:6px;}
+  .step b{display:block; font-size:16px;} .step span{font-size:13.5px; color:var(--dim);}
+  .notebook{background:#fff; border:2px solid #b9c7e2; border-radius:8px; padding:14px 14px 14px 46px; margin:10px 0; position:relative;
+    background-image:linear-gradient(#cfe0f5 1px,transparent 1px); background-size:100% 28px; line-height:28px; font-size:16px;}
+  .notebook::before{content:''; position:absolute; left:34px; top:0; bottom:0; width:2px; background:#f4a3a3;}
+  .notebook .hand{font-size:24px;}
+
+  /* ===== vocab ===== */
+  .subtabs{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px;}
+  .sub{display:inline-flex; gap:6px; align-items:center; background:#fff; border:2px solid var(--line); border-radius:999px; padding:7px 13px; font-weight:600; font-size:13.5px; cursor:pointer; color:var(--dim);}
+  .sub small{background:#eef1f7; border-radius:999px; padding:0 7px; font-size:11.5px;}
+  .sub.on{background:var(--c); border-color:var(--c); color:#fff;} .sub.on small{background:rgba(255,255,255,.28); color:#fff;}
+  .vsec{display:none;} .vsec.on{display:block;}
+  .vhead{border-left:8px solid var(--c); background:#fff;}
+  .vhead h2{color:var(--c);}
+  .wgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
+  @media(max-width:660px){.wgrid{grid-template-columns:1fr;}}
+  .wc{display:flex; gap:10px; background:#fff; border:2px solid var(--line); border-radius:14px; padding:10px 12px;}
+  .wc .we{font-size:34px; width:46px; text-align:center; flex:none; line-height:1.2;}
+  .wc .wt{display:flex; align-items:center; gap:7px; flex-wrap:wrap;}
+  .wc .wt b{font-size:18px;}
+  .tg{background:var(--yellow-soft); border:1px solid #ecd45a; border-radius:999px; font-size:11.5px; font-weight:700; padding:0 8px; color:#6b5a00;}
+  .tg.pl{background:var(--blue-soft); border-color:#b8c9f5; color:var(--blue);}
+  .tg.z{background:var(--green-soft); border-color:#9fdcbc; color:#17784a;}
+  .tg.u{background:#eef1f7; border-color:#cfd7e6; color:#556;}
+  .say{border:none; background:#eef3ff; border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:13px; flex:none;}
+  .say:hover{background:var(--blue-soft);}
+  .wc .wr{color:var(--blue); font-weight:600; font-size:14.5px;}
+  .wc .wx{font-size:13.3px; margin-top:3px; line-height:1.4;} .wc .wx i{display:block; color:var(--dim); font-style:normal;}
+  .usage{background:var(--blue-soft); border-radius:14px; padding:12px 16px; margin:12px 0;}
+  .usage h4,.warn h4{margin:0 0 6px; font-family:'Caveat'; font-size:24px;}
+  .usage ul,.warn ul{margin:0; padding-left:18px; line-height:1.55; font-size:14.5px;}
+  .usage li span{display:block; color:var(--dim); font-size:13px;}
+  .warn{background:var(--yellow-soft); border:2px dashed #e0c33a; border-radius:14px; padding:12px 16px; margin:12px 0;}
+  .bub{max-width:92%; padding:9px 13px; border-radius:16px; margin:7px 0; display:flex; gap:8px; align-items:flex-start; font-size:15px; line-height:1.4;}
+  .bub.t{background:var(--green-soft); border-top-left-radius:3px;}
+  .bub.p{background:var(--blue-soft); margin-left:auto; border-top-right-radius:3px;}
+  .bub small{display:block; color:var(--dim); font-size:12.8px;}
+  .who{font-family:'Caveat'; font-size:24px; margin:12px 0 0;}
+
+  /* ===== tables & boxes ===== */
+  table.tbl{width:100%; border-collapse:collapse; font-size:14px; margin:8px 0;}
+  .tbl th,.tbl td{padding:8px 9px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top;}
+  .tbl th{font-size:12px; color:var(--acc); text-transform:uppercase; letter-spacing:.3px;}
+  .ex{background:var(--soft); border-left:4px solid var(--acc); border-radius:10px; padding:7px 12px; margin:6px 0; font-size:15px;}
+  .ex .ru{color:var(--dim); font-size:13.3px;}
+  .note{background:var(--yellow-soft); border:1px dashed #e0c33a; border-radius:10px; padding:9px 12px; margin:8px 0; font-size:14px; line-height:1.5;}
+  .pills{display:flex; flex-wrap:wrap; gap:7px; margin:8px 0;}
+  .pillx{background:var(--soft); border-radius:999px; padding:5px 12px; font-size:13.5px; font-weight:600;}
+  .recipe{counter-reset:s; list-style:none; padding:0; margin:8px 0;}
+  .recipe li{counter-increment:s; position:relative; padding:9px 12px 9px 48px; margin:7px 0; background:var(--soft); border-radius:12px; line-height:1.5; font-size:14.8px;}
+  .recipe li::before{content:counter(s); position:absolute; left:10px; top:8px; width:28px; height:28px; border-radius:50%; background:var(--acc); color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center;}
+  .recipe em{color:var(--acc); font-style:normal; font-weight:700;}
+
+  /* ===== prepositions lab ===== */
+  .lab{position:relative; width:100%; max-width:440px; aspect-ratio:16/10; margin:10px auto; border-radius:14px; overflow:hidden; border:2px solid var(--ink); container-type:inline-size;
+    background:linear-gradient(180deg,#e2f1fa 0 56%,#dbb98a 56% 100%);}
+  .lab .o{position:absolute; transform:translate(-50%,-50%);}
+  .lab .box{border-radius:5px; border:2px solid #7a5128;}
+  .lab .ball{font-size:8cqw; line-height:1; z-index:3; transition:left .6s ease,top .6s ease,font-size .6s ease;}
+  .lab .lbl{position:absolute; left:50%; top:3px; transform:translateX(-50%); font-size:12px; font-weight:700; background:#fff; border-radius:8px; padding:0 8px; opacity:.85;}
+
+  /* ===== quizzes ===== */
+  .quiz-q{margin:15px 0 4px;}
+  .qtext{font-weight:700; margin-bottom:8px; font-size:15.5px; line-height:1.45;}
+  .bigemo{font-size:40px; margin-right:6px; vertical-align:middle;}
+  .gap{display:inline-block; min-width:34px; text-align:center; border-bottom:3px solid var(--acc); color:var(--acc); font-weight:800;}
+  .opts{display:flex; flex-wrap:wrap; gap:8px;}
+  .opt{background:#fff; border:2px solid var(--line); color:var(--ink); font-family:'Fira Sans'; font-weight:600; font-size:14.5px; padding:9px 15px; border-radius:12px; cursor:pointer; transition:.12s; text-align:left;}
+  .opt:hover:not(:disabled){border-color:var(--acc); transform:translateY(-1px);}
+  .opt:disabled{cursor:default;}
+  .opt.ok{background:var(--ok); border-color:var(--ok); color:#fff;}
+  .opt.bad{background:var(--bad); border-color:var(--bad); color:#fff;}
+  .fb{display:none; margin-top:8px; padding:9px 13px; border-radius:10px; font-size:14px; line-height:1.5; font-weight:600;}
+  .fb.show{display:block;} .fb.ok{background:#dcf7ee; color:#0a6e53;} .fb.bad{background:#ffe4e7; color:#a52a39;}
+  .mini-score{margin-top:10px; font-weight:700; font-size:13.5px; color:var(--acc);}
+  .task-head{display:flex; align-items:center; gap:10px; margin-bottom:4px;}
+  .task-head .n{background:var(--acc); color:#fff; border-radius:10px; font-weight:700; padding:2px 11px; font-size:14px;}
+  .task-head h3{margin:0;}
+
+  .pool,.bin-body{display:flex; flex-wrap:wrap; gap:8px; min-height:44px;}
+  .pool{background:#faf9ff; border:2px dashed var(--line); border-radius:12px; padding:10px; margin:8px 0;}
+  .bins{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:8px;}
+  .bin{border:2px solid var(--acc); border-radius:14px; padding:9px; cursor:pointer; background:var(--soft);}
+  .bin h4{margin:0 0 6px; font-size:14px; color:var(--acc);}
+  .chip{background:#fff; border:2px solid var(--line); border-radius:10px; padding:6px 11px; font-weight:600; font-size:14px; cursor:pointer; user-select:none;}
+  .chip.sel{border-color:var(--purple); box-shadow:0 0 0 3px #d6c8ff;}
+  .chip.ok{background:var(--ok); border-color:var(--ok); color:#fff;} .chip.bad{background:var(--bad); border-color:var(--bad); color:#fff;}
+
+  .typerow{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0;}
+  .typerow .e{font-size:34px; width:46px; text-align:center;}
+  .typerow .r{flex:1; min-width:140px; font-weight:600;}
+  .typerow input{font-family:'Fira Sans'; font-weight:600; font-size:15px; padding:8px 11px; border:2px solid var(--line); border-radius:10px; width:190px;}
+  .typerow input:focus{outline:none; border-color:var(--acc);}
+  .typerow input.ok{border-color:var(--ok); background:#dcf7ee;} .typerow input.bad{border-color:var(--bad); background:#ffe4e7;}
+  .tt{width:100%; border-collapse:collapse; margin:10px 0; font-size:14px; text-align:center;}
+  .tt th,.tt td{border:2px solid var(--line); padding:7px 6px;} .tt th{background:var(--green-soft);}
+
+  /* ===== rooms ===== */
+  .roomchips{display:flex; flex-wrap:wrap; gap:7px; margin:8px 0 12px;}
+  .stage{position:relative; width:100%; aspect-ratio:16/10; border-radius:16px; overflow:hidden; border:3px solid var(--ink); container-type:inline-size;}
+  .stage .it{position:absolute; transform:translate(-50%,-50%); line-height:1; user-select:none;}
+  .stage .bx{position:absolute; transform:translate(-50%,-50%); border:2px solid rgba(0,0,0,.35); border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:2.2cqw; overflow:hidden; letter-spacing:1px;}
+  .stage.hints [data-n]::after{content:attr(data-n); position:absolute; left:50%; top:100%; transform:translateX(-50%); background:rgba(255,255,255,.92); color:var(--ink); font-size:1.7cqw; font-weight:700; padding:0 .8cqw; border-radius:6px; white-space:nowrap; z-index:9; border:1px solid #bcc7dc;}
+  .stage.hints .bx[data-n]{overflow:visible;}
+  .bank{display:flex; flex-wrap:wrap; gap:7px; margin:10px 0;}
+  .bank .chipw{background:#fff; border:2px solid var(--line); border-radius:999px; padding:4px 12px; font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:6px;}
+  textarea.write{width:100%; min-height:150px; font-family:'Fira Sans'; font-size:15.5px; line-height:1.55; border:2px solid var(--ink); border-radius:12px; padding:12px; resize:vertical;}
+  textarea.write:focus{outline:none; border-color:var(--acc);}
+  .checklist{list-style:none; padding:0; margin:10px 0;}
+  .checklist li{padding:6px 10px; border-radius:9px; margin:5px 0; background:#f3f5fa; font-size:14.3px; display:flex; gap:8px;}
+  .checklist li.done{background:#dcf7ee; color:#0a6e53; font-weight:600;}
+  .prog{height:12px; background:#e7ebf4; border-radius:8px; overflow:hidden; margin:8px 0;}
+  .prog i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--orange),var(--green)); transition:width .3s;}
+  .model{display:none; background:var(--green-soft); border:2px dashed var(--green); border-radius:12px; padding:12px 14px; margin-top:10px; line-height:1.65; font-size:15.5px;}
+  .model.show{display:block;}
+
+  /* ===== infinite ===== */
+  .chips{display:flex; gap:7px; flex-wrap:wrap; margin:8px 0 12px;}
+  .fchip{border:2px solid var(--line); background:#fff; border-radius:999px; padding:6px 14px; font-weight:700; font-size:13px; cursor:pointer; color:var(--dim);}
+  .fchip.on{background:var(--red); border-color:var(--red); color:#fff;}
+  .panel{display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between; background:var(--red-soft); border-radius:14px; padding:12px 16px; margin-bottom:10px;}
+  .metric{font-size:12px; color:var(--dim); font-weight:600;} .metric b{display:block; font-size:24px; color:var(--red); font-family:'Fira Sans';}
+  .metric.fire b{color:var(--orange);}
+  .goal{font-size:13px; color:var(--dim); font-weight:600;} .goal select{font-family:'Fira Sans'; border:2px solid var(--line); border-radius:8px; padding:4px 6px; margin-left:4px;}
+  .bars{display:flex; gap:3px; align-items:flex-end; height:28px; margin:6px 0 10px; flex-wrap:wrap;}
+  .bars span{width:8px; height:14px; border-radius:3px; background:#e7e3f7; transition:.2s;}
+  .bars span.lit{background:var(--orange); height:26px;}
+  .banner{display:none; background:linear-gradient(90deg,#ffe29a,#ffc0d3); border-radius:12px; padding:12px 16px; font-weight:700; margin:8px 0;}
+  .banner.show{display:block;}
+  .cta{display:block; margin:16px auto 0;}
+  footer{text-align:center; color:var(--dim); font-size:12.5px; padding:22px 12px 6px;}
+
+  @media print{
+    .hero,nav.tabs,.subtabs,.navb,.say,.btn,.noprint{display:none!important;}
+    body{background:#fff;} .station{display:none!important;} .station.t-voc{display:block!important;}
+    .vsec{display:none!important;} .vsec.on{display:block!important;} .card{box-shadow:none; break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="board">
+    <div class="chalk-row"><span>🎒</span><span>✏️</span><span class="bell">🔔</span><span>📏</span><span>📚</span></div>
+    <h1>My School</h1>
+    <p>Школьные предметы, пенал, классная комната, места и люди в школе. Учим слова с примерами, повторяем грамматику для описаний и учимся описывать комнаты на английском.</p>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+
+<main>
+
+<!-- ============ 0. START ============ -->
+<section class="station t-start on" data-i="0">
+  <div class="card">
+    <span class="badge">СТАРТ</span>
+    <h2>Что мы учим на этом уроке</h2>
+    <p>Тема: <b>школа</b>. Мы выучим больше <b id="wcount">150</b> слов и выражений, повторим <span class="hl">there is / there are, предлоги места, артикли</span> и научимся описывать комнаты и пространства школы.</p>
+    <div class="steps" id="steps"></div>
+  </div>
+  <div class="card">
+    <h3>✍️ Как переписывать тему в тетрадь</h3>
+    <p>После изучения словаря перепиши слова в тетрадь по разделам. Для каждого слова — <b>одна строчка слова с переводом</b>, <b>одно предложение</b> и по желанию маленький рисунок.</p>
+    <div class="notebook"><div class="hand">📏 a ruler — линейка</div><div>I draw a line with a ruler.</div><div class="hand">🎒 a school bag — школьный рюкзак</div><div>My school bag is heavy today.</div></div>
+    <p class="muted">Совет: записывай слово вместе с артиклем (<b>a ruler</b>, <b>an eraser</b>) — так артикль запомнится сам. Кнопка 🔊 рядом с каждым словом произносит его вслух.</p>
+  </div>
+</section>
+
+<!-- ============ 1. VOCAB ============ -->
+<section class="station t-voc" data-i="1">
+  <div class="card" style="border-color:var(--blue)">
+    <span class="badge">СЛОВАРЬ</span>
+    <h2>Все слова темы по разделам</h2>
+    <p class="muted">Выбери раздел. У каждого слова — перевод, пример и кнопка 🔊. Ниже каждого раздела — «как использовать» и «осторожно, ловушки».</p>
+    <div class="row noprint"><button class="btn sm" onclick="window.print()">🖨️ Печать раздела</button></div>
+  </div>
+  <div class="subtabs" id="subtabs"></div>
+  <div id="vbody"></div>
+  <div class="navb"><button class="btn ghost" onclick="goTo(0)">← Назад</button><button class="btn" onclick="goTo(2)">Дальше: грамматика →</button></div>
+</section>
+
+<!-- ============ 2. GRAMMAR ============ -->
+<section class="station t-gram" data-i="2">
+  <div class="card">
+    <span class="badge">ГРАММАТИКА ДЛЯ ОПИСАНИЙ</span>
+    <h2>Базовая грамматика, чтобы описывать комнаты</h2>
+    <p>Чтобы описать классную комнату, нужны шесть вещей: <b>there is/are</b>, <b>предлоги места</b>, <b>артикли</b>, <b>this/that/these/those</b>, <b>множественное число</b> и <b>прилагательные</b>. Повторим каждую.</p>
+  </div>
+
+  <div class="card">
+    <h3>1️⃣ There is / There are</h3>
+    <p>Так мы говорим, что что-то <b>есть</b> в комнате. Единственное число → <b>there is a/an</b>. Множественное → <b>there are</b> (+ число или some).</p>
+    <table class="tbl"><tr><th></th><th>Единственное</th><th>Множественное</th></tr>
+      <tr><td>+</td><td>There is a clock on the wall.</td><td>There are two windows.</td></tr>
+      <tr><td>−</td><td>There isn't a map.</td><td>There aren't any desks.</td></tr>
+      <tr><td>?</td><td>Is there a bin? — Yes, there is. / No, there isn't.</td><td>Are there any plants? — Yes, there are. / No, there aren't.</td></tr>
+      <tr><td>Сколько?</td><td colspan="2">How many chairs are there? — There are twenty.</td></tr></table>
+    <div class="note">💡 <b>some</b> — в утверждениях (There are some books), <b>any</b> — в вопросах и отрицаниях (Are there any books? There aren't any books).</div>
+    <div id="g1"></div>
+  </div>
+
+  <div class="card">
+    <h3>2️⃣ Предлоги места — где находится предмет?</h3>
+    <p>Нажимай на предлоги — мячик ⚽ покажет, что они значат.</p>
+    <div class="lab" id="lab">
+      <div class="o box" style="left:28%;top:57%;width:26%;height:9%;background:#b8793f;"></div>
+      <div class="o box" style="left:18%;top:69%;width:2.5%;height:14%;background:#9b6a3c;"></div>
+      <div class="o box" style="left:38%;top:69%;width:2.5%;height:14%;background:#9b6a3c;"></div>
+      <div class="o box" style="left:75%;top:55%;width:18%;height:38%;background:#c9a779;"><span style="font-size:11px;font-weight:700">cupboard</span></div>
+      <div class="o" style="left:28%;top:47%;font-size:3.2cqw;font-weight:700;color:#5a3a16;z-index:2">desk</div>
+      <div class="o ball" id="ball" style="left:28%;top:40%;">⚽</div>
+    </div>
+    <div class="row" style="justify-content:center"><div class="ex" style="margin:4px 0" id="labSent">The ball is on the desk.</div><button class="say" data-say="The ball is on the desk." id="labSay">🔊</button></div>
+    <div class="pills" id="labBtns" style="justify-content:center"></div>
+    <table class="tbl"><tr><th>Предлог</th><th>Значение</th><th>Пример в классе</th></tr>
+      <tr><td><b>in</b></td><td>внутри</td><td>The ruler is in the pencil case.</td></tr>
+      <tr><td><b>on</b></td><td>на (поверхности)</td><td>There is a map on the wall.</td></tr>
+      <tr><td><b>under</b></td><td>под</td><td>My bag is under the desk.</td></tr>
+      <tr><td><b>next to / beside</b></td><td>рядом, около</td><td>The globe is next to the window.</td></tr>
+      <tr><td><b>near</b></td><td>недалеко от</td><td>The bin is near the door.</td></tr>
+      <tr><td><b>behind</b></td><td>позади</td><td>Tom sits behind Anna.</td></tr>
+      <tr><td><b>in front of</b></td><td>перед</td><td>The teacher's desk is in front of the board.</td></tr>
+      <tr><td><b>between</b></td><td>между (двумя)</td><td>The clock is between the windows.</td></tr>
+      <tr><td><b>above</b></td><td>над</td><td>The clock is above the board.</td></tr>
+      <tr><td><b>opposite</b></td><td>напротив</td><td>The door is opposite the board.</td></tr>
+      <tr><td><b>on the left / right</b></td><td>слева / справа</td><td>There is a window on the right.</td></tr>
+      <tr><td><b>in the middle (of)</b></td><td>посередине</td><td>There is a table in the middle of the room.</td></tr>
+      <tr><td><b>in the corner (of)</b></td><td>в углу</td><td>There is a plant in the corner.</td></tr>
+      <tr><td><b>at the back / front (of)</b></td><td>в конце / в начале</td><td>The goal is at the back of the gym.</td></tr></table>
+    <div id="g2"></div>
+  </div>
+
+  <div class="card">
+    <h3>3️⃣ Артикли: a / an, the, Ø (повторение на школьных словах)</h3>
+    <table class="tbl"><tr><th>Артикль</th><th>Когда</th><th>Пример</th></tr>
+      <tr><td><b>a / an</b></td><td>первый раз, «какой-то», профессия</td><td>There is a ruler on the desk. He is a teacher.</td></tr>
+      <tr><td><b>the</b></td><td>уже знаем какой; единственный; ситуация понятна</td><td>The ruler is blue. Close the door, please.</td></tr>
+      <tr><td><b>Ø</b></td><td>предметы, имена, устойчивые выражения, вообще</td><td>I like Maths. We go to school by bus. I do homework.</td></tr></table>
+    <div class="note">Смотри на <b>звук</b>: <b>a</b> PE lesson, <b>an</b> ICT lesson, <b>an</b> hour, <b>a</b> uniform. На вкладке «Артикли ∞» можно тренироваться бесконечно!</div>
+    <button class="btn sm" onclick="goTo(5)">К тренажёру артиклей →</button>
+  </div>
+
+  <div class="card">
+    <h3>4️⃣ This / That / These / Those</h3>
+    <table class="tbl"><tr><th></th><th>Рядом</th><th>Далеко</th></tr>
+      <tr><td>Единственное</td><td><b>this</b> — это<br>This is my desk.</td><td><b>that</b> — то<br>That is the teacher's desk.</td></tr>
+      <tr><td>Множественное</td><td><b>these</b> — эти<br>These are my pencils.</td><td><b>those</b> — те<br>Those are your books.</td></tr></table>
+    <div class="ex">What is this? — It's a ruler. <div class="ru">What are these? — They are scissors.</div></div>
+    <div id="g4"></div>
+  </div>
+
+  <div class="card">
+    <h3>5️⃣ Множественное число школьных слов</h3>
+    <table class="tbl"><tr><th>Правило</th><th>Примеры</th></tr>
+      <tr><td>+<b>s</b></td><td>pencil → pencils, desk → desks, book → books</td></tr>
+      <tr><td>+<b>es</b> (s, x, ch, sh)</td><td>class → classes, box → boxes, brush → brushes, sandwich → sandwiches, bus → buses</td></tr>
+      <tr><td>согласная + y → <b>ies</b></td><td>diary → diaries, library → libraries, story → stories (но boy → boys, key → keys)</td></tr>
+      <tr><td>f / fe → <b>ves</b></td><td>shelf → shelves, knife → knives</td></tr>
+      <tr><td>Исключения</td><td>child → children, man → men, woman → women, person → people, foot → feet</td></tr>
+      <tr><td>Только мн. число</td><td>scissors, compasses, glasses, stairs, toilets → a pair of scissors</td></tr>
+      <tr><td>Неисчисляемые</td><td>homework, chalk, paper, music → some homework, a piece of chalk, a sheet of paper</td></tr></table>
+    <div id="g5"></div>
+  </div>
+
+  <div class="card">
+    <h3>6️⃣ Прилагательные для описания</h3>
+    <div class="pills">
+      <span class="pillx">📏 big · small · large · tiny · tall · long · short</span>
+      <span class="pillx">🧼 new · old · clean · dirty · tidy · messy · broken</span>
+      <span class="pillx">✨ bright · dark · colourful · cosy · quiet · noisy · warm · cold · modern</span>
+      <span class="pillx">🎨 red · blue · green · yellow · orange · purple · pink · brown · black · white · grey</span>
+    </div>
+    <div class="ex">Порядок: <b>размер → цвет → предмет</b>: a <b>big green</b> board, a <b>small brown</b> desk. <div class="ru">После is прилагательные идут сами по себе: The classroom is big and bright.</div></div>
+    <div class="ex">Особенности комнаты можно описывать с <b>has got</b>: Our classroom has got big windows.</div>
+    <div id="g6"></div>
+  </div>
+
+  <div class="card">
+    <h3>🧭 Рецепт: как описать комнату за 7 шагов</h3>
+    <ol class="recipe">
+      <li><em>Что это?</em> This is our classroom. / This is the library. + <i>It is big and bright.</i></li>
+      <li><em>Что есть?</em> There is a … / There are … (используй новые слова!)</li>
+      <li><em>Сколько?</em> There are six desks. There are two windows.</li>
+      <li><em>Где?</em> … is on / in / under / next to / behind / in front of …</li>
+      <li><em>Какой?</em> a big green board, a small brown desk.</li>
+      <li><em>Кто там?</em> The teacher is next to the board. Two pupils are at the desks.</li>
+      <li><em>Твоё мнение:</em> I like it because it is … / My favourite place is …</li>
+    </ol>
+    <p class="muted">Полезные связки: <b>On the left / right, … · In the middle of the room, … · At the back of the room, … · Near the door, … · In the corner, …</b></p>
+  </div>
+
+  <div class="navb"><button class="btn ghost" onclick="goTo(1)">← Назад</button><button class="btn" onclick="goTo(3)">К тренировке слов →</button></div>
+</section>
+
+<!-- ============ 3. TRAINING ============ -->
+<section class="station t-train" data-i="3">
+  <div class="card">
+    <span class="badge">ТРЕНИРОВКА СЛОВ</span>
+    <h2>Семь заданий на новые слова</h2>
+    <p>Слова в заданиях каждый раз выбираются случайно из всего словаря. Нажми «Новый набор», чтобы получить другие вопросы.</p>
+    <button class="btn" onclick="buildTraining()">🔄 Новый набор</button>
+  </div>
+  <div class="card"><div class="task-head"><span class="n">1</span><h3>Что на картинке?</h3></div><div id="e1"></div></div>
+  <div class="card"><div class="task-head"><span class="n">2</span><h3>Слово → перевод</h3></div><div id="e2"></div></div>
+  <div class="card"><div class="task-head"><span class="n">3</span><h3>Напиши по-английски</h3></div><p class="muted">Смотри на картинку и перевод, пиши слово. Артикль не нужен.</p><div id="e3"></div></div>
+  <div class="card"><div class="task-head"><span class="n">4</span><h3>Разложи по корзинам</h3></div><p class="muted">Нажми на слово, потом на корзину. Нажми на слово в корзине, чтобы вернуть его.</p><div id="e4"></div></div>
+  <div class="card"><div class="task-head"><span class="n">5</span><h3>Найди лишнее</h3></div><div id="e5"></div></div>
+  <div class="card"><div class="task-head"><span class="n">6</span><h3>Закончи предложение</h3></div><div id="e6"></div></div>
+  <div class="card"><div class="task-head"><span class="n">7</span><h3>Читаем расписание</h3></div><div id="e7"></div></div>
+  <div class="navb"><button class="btn ghost" onclick="goTo(2)">← Назад</button><button class="btn" onclick="goTo(4)">К описанию комнат →</button></div>
+</section>
+
+<!-- ============ 4. ROOMS ============ -->
+<section class="station t-room" data-i="4">
+  <div class="card">
+    <span class="badge">ОПИШИ КОМНАТУ</span>
+    <h2>Описываем комнаты и пространства школы</h2>
+    <p>Выбери комнату. Сначала <b>внимательно рассмотри её</b> и ответь на вопросы. Потом <b>напиши своё описание</b>: список проверки сам покажет, использовал ли ты новые слова, there is/are, предлоги, артикли и прилагательные.</p>
+    <div class="roomchips" id="roomchips"></div>
+  </div>
+  <div id="roomBody"></div>
+  <div class="navb"><button class="btn ghost" onclick="goTo(3)">← Назад</button><button class="btn" onclick="goTo(5)">К тренажёру артиклей →</button></div>
+</section>
+
+<!-- ============ 5. ARTICLES INFINITE ============ -->
+<section class="station t-art" data-i="5">
+  <div class="card">
+    <span class="badge">БЕСКОНЕЧНЫЙ ТРЕНАЖЁР АРТИКЛЕЙ</span>
+    <h2>Артикли на школьных словах</h2>
+    <p>Каждый раз новый случайный вопрос. <b>Серия 🔥</b> сбрасывается при первой ошибке, поэтому заучить не получится: нужно понять правила. Выбери цель серии и тему.</p>
+    <div class="chips" id="filters"></div>
+    <div class="panel">
+      <div class="metric">Правильно<b id="iScore">0</b></div>
+      <div class="metric">Всего<b id="iTotal">0</b></div>
+      <div class="metric fire">🔥 Серия<b id="iStreak">0</b></div>
+      <div class="metric">Рекорд<b id="iBest">0</b></div>
+      <div class="goal">Цель серии: <select id="goalSel" onchange="setGoal()"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div>
+      <button class="btn ghost sm" onclick="resetInf()">Сбросить</button>
+    </div>
+    <div class="bars" id="bars"></div>
+    <div class="banner" id="banner"></div>
+    <div id="iq"></div>
+    <button class="btn cta" onclick="nextInf()">Следующий вопрос →</button>
+  </div>
+  <div class="navb"><button class="btn ghost" onclick="goTo(4)">← К комнатам</button></div>
+</section>
+
+</main>
+<footer>My School · школьная лексика · учим слова, описываем комнаты, тренируем артикли 🎒</footer>
+
+<script>
+/* ================= helpers ================= */
+const $ = id => document.getElementById(id);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+const ARTS=['a','an','the','Ø'];
+const label=o=>o==='Ø'?'Ø (без артикля)':o;
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+function fill(s,ans){
+  const i=s.indexOf('___ '); if(i<0) return s;
+  const before=s.slice(0,i), after=s.slice(i+4);
+  const start=before.trim()===''||/[.!?]\s*$/.test(before);
+  let d=ans==='Ø'?'':ans;
+  if(start){ if(d) d=cap(d); else return before+cap(after); }
+  return before+(d?d+' ':'')+after;
+}
+function speak(t){
+  if(!('speechSynthesis' in window)) return;
+  try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='en-GB'; u.rate=.9; speechSynthesis.speak(u);}catch(e){}
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-say]'); if(b) speak(b.dataset.say);});
+
+/* ================= tabs ================= */
+const TABS=[
+  {i:'🏫',l:'Старт',c:'#233044'},{i:'📚',l:'Словарь',c:'#2d5bd6'},{i:'🧱',l:'Грамматика',c:'#7a4fd8'},
+  {i:'🎮',l:'Тренировка слов',c:'#2ea36b'},{i:'🏠',l:'Опиши комнату',c:'#f28c28'},{i:'🔁',l:'Артикли ∞',c:'#e4473b'}
+];
+TABS.forEach((t,k)=>{
+  const b=document.createElement('div'); b.className='tab'; b.style.setProperty('--c',t.c); b.innerHTML=`${t.i} ${t.l}`; b.onclick=()=>goTo(k); $('tabs').appendChild(b);
+});
+function goTo(i){
+  document.querySelectorAll('.station').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
+  document.querySelectorAll('.tab').forEach((el,k)=>el.classList.toggle('on',k===i));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ================= VOCABULARY DATA ================= */
+// I(word, ru, emoji, example, exampleRu, art, x)  art: a|an|the|pl|u|z|'' ; x = no picture quiz
+const I=(w,ru,e,ex,exru,art,x)=>({w,ru,e,ex,exru,art:art||'',x:!!x});
+
+const SEC=[
+ {id:'subjects',t:'Предметы',e:'📚',c:'#2d5bd6',quiz:true,
+  intro:'Школьные предметы. Названия предметов пишем с большой буквы и <b>без артикля</b>.',
+  items:[
+   I('Maths','математика','➗','We have Maths on Monday.','У нас математика в понедельник.','z'),
+   I('English','английский язык','🔤','I have English twice a week.','У меня английский два раза в неделю.','z'),
+   I('Russian','русский язык','📕','We write a dictation in Russian.','Мы пишем диктант по русскому.','z'),
+   I('Literature','литература','📚','In Literature we read stories and poems.','На литературе мы читаем рассказы и стихи.','z',1),
+   I('History','история','🏰','History is my favourite subject.','История — мой любимый предмет.','z'),
+   I('Geography','география','🗺️','In Geography we study countries and maps.','На географии мы изучаем страны и карты.','z'),
+   I('Biology','биология','🌿','In Biology we learn about plants and animals.','На биологии мы узнаём о растениях и животных.','z'),
+   I('Chemistry','химия','🧪','We do experiments in Chemistry.','На химии мы проводим опыты.','z'),
+   I('Physics','физика','⚛️','Physics is difficult but interesting.','Физика трудная, но интересная.','z'),
+   I('Science','естествознание','🔬','We study the Sun and the planets in Science.','На естествознании мы изучаем Солнце и планеты.','z'),
+   I('The World Around Us','окружающий мир','🌳','The World Around Us is about nature.','«Окружающий мир» — это о природе.','z',1),
+   I('ICT','информатика','💻','In ICT we work on computers.','На информатике мы работаем за компьютерами.','z'),
+   I('PE','физкультура','⚽','We play games in PE.','На физкультуре мы играем в игры.','z'),
+   I('Art','рисование, ИЗО','🎨','I draw and paint in Art.','На ИЗО я рисую и раскрашиваю.','z'),
+   I('Music','музыка','🎵','We sing songs in Music.','На музыке мы поём песни.','z'),
+   I('Technology','технология (труд)','🛠️','In Technology we make things from wood.','На технологии мы делаем вещи из дерева.','z'),
+   I('Drama','театр, драма','🎭','We act out a story in Drama.','На драме мы разыгрываем историю.','z'),
+   I('French','французский язык','🥖','My sister studies French.','Моя сестра учит французский.','z'),
+   I('Social studies','обществознание','🏛️','Social studies is about people and society.','Обществознание — о людях и обществе.','z'),
+   I('Reading','чтение','📖','We have Reading every morning.','У нас чтение каждое утро.','z',1),
+   I('Writing','письмо','✍️','We practise Writing in class.','Мы тренируем письмо на уроке.','z'),
+   I('Spelling','правописание','🔡','We have a Spelling test on Friday.','В пятницу у нас тест по правописанию.','z')
+  ],
+  usage:[
+   ['I have Maths on Tuesday.','У меня математика во вторник. (have + предмет + on + день)'],
+   ['My favourite subject is Art.','Мой любимый предмет — рисование.'],
+   ['I love Music, but I hate Physics.','Я люблю музыку, но ненавижу физику. (like / love / hate / don\'t mind)'],
+   ['I\'m good at Maths. I\'m interested in History.','Я хорош в математике. Мне интересна история. (good at / bad at / interested in)'],
+   ['Science is fun. English is easy.','Предмет + is + easy / difficult / boring / interesting / useful / fun.'],
+   ['What subjects do you have today? — We have English, Maths and PE.','Какие предметы у вас сегодня?'],
+   ['Our Maths teacher is Mrs Green.','Наш учитель математики — миссис Грин.']
+  ],
+  warn:['Предметы — <b>без артикля</b> и с большой буквы: <i>Maths</i>, <i>History</i> (не «the History»).','<b>Maths</b> заканчивается на -s, но это единственное число: <i>Maths is difficult.</i> (так же Physics). В США говорят <i>Math</i>.','<b>PE</b> читается «пи-и» → <i>a PE lesson</i>. <b>ICT</b> читается «ай-си-ти» → <i>an ICT lesson</i>.','<b>Russian</b> — это и язык, и национальность: <i>She speaks Russian.</i>']},
+
+ {id:'case',t:'Пенал и сумка',e:'🎒',c:'#2ea36b',quiz:true,
+  intro:'Всё, что лежит в пенале и в школьной сумке. Слова с артиклем показывают, как их запоминать.',
+  items:[
+   I('pencil','карандаш','✏️','I draw with a pencil.','Я рисую карандашом.','a'),
+   I('pen','ручка','🖊️','I write with a blue pen.','Я пишу синей ручкой.','a'),
+   I('felt-tip pen','фломастер','🖊️','This felt-tip pen is red.','Этот фломастер красный.','a',1),
+   I('rubber (eraser)','ластик','🧽','Can I borrow your rubber?','Можно одолжить твой ластик?','a',1),
+   I('ruler','линейка','📏','I draw a line with a ruler.','Я провожу линию линейкой.','a'),
+   I('set square','угольник','📐','I use a set square in Maths.','Я пользуюсь угольником на математике.','a'),
+   I('pencil sharpener','точилка','✏️','My pencil is blunt. I need a pencil sharpener.','Мой карандаш тупой. Мне нужна точилка.','a',1),
+   I('scissors','ножницы','✂️','Be careful with the scissors!','Осторожнее с ножницами!','pl'),
+   I('glue stick','клей-карандаш','🧴','Please pass me the glue stick.','Передай мне, пожалуйста, клей.','a',1),
+   I('exercise book','тетрадь','📓','Write your name in your exercise book.','Напиши своё имя в тетради.','an'),
+   I('textbook','учебник','📖','Open your textbook at page ten.','Откройте учебник на десятой странице.','a'),
+   I('notebook','блокнот','📒','I write new words in my notebook.','Я записываю новые слова в блокнот.','a'),
+   I('diary','дневник','📔','I write my homework in my diary.','Я записываю домашнее задание в дневник.','a'),
+   I('folder','папка','📁','My papers are in the folder.','Мои листы лежат в папке.','a'),
+   I('calculator','калькулятор','🧮','You can use a calculator in the test.','В тесте можно пользоваться калькулятором.','a',1),
+   I('paints','краски','🎨','We use paints in Art.','На ИЗО мы используем краски.','pl'),
+   I('brush','кисть','🖌️','Wash the brush with water.','Помой кисть водой.','a'),
+   I('highlighter','маркер-выделитель','🖍️','I use a highlighter for important words.','Я выделяю важные слова маркером.','a'),
+   I('paper clip','скрепка','📎','There is a paper clip on the floor.','На полу лежит скрепка.','a'),
+   I('compasses','циркуль','⭕','We draw circles with compasses.','Мы чертим круги циркулем.','pl',1),
+   I('sheet of paper','лист бумаги','📄','Take a sheet of paper, please.','Возьмите лист бумаги, пожалуйста.','a'),
+   I('school bag','школьный рюкзак, портфель','🎒','My school bag is heavy today.','Мой портфель сегодня тяжёлый.','a'),
+   I('pencil case','пенал','👝','My pencils are in my pencil case.','Мои карандаши в пенале.','a',1),
+   I('lunch box','ланч-бокс','🍱','I have a sandwich in my lunch box.','В моём ланч-боксе бутерброд.','a')
+  ],
+  usage:[
+   ['I write with a pen. I draw with a pencil. I cut with scissors.','Я пишу ручкой. Я рисую карандашом. Я режу ножницами. (with + инструмент)'],
+   ['Have you got a ruler? — Yes, I have. / No, I haven\'t.','У тебя есть линейка?'],
+   ['Can I borrow your pencil? / Can you lend me a pen?','Можно одолжить твой карандаш? / Одолжишь мне ручку?'],
+   ['I\'ve forgotten my textbook. / I left my diary at home.','Я забыл учебник. / Я оставил дневник дома.'],
+   ['There are two pens and a rubber in my pencil case.','В моём пенале две ручки и ластик.'],
+   ['I need a pair of scissors. My scissors are sharp.','Мне нужны ножницы. Мои ножницы острые.']]
+  ,
+  warn:['<b>exercise book</b> — школьная тетрадь, а <b>notebook</b> — блокнот (и ещё ноутбук).','<b>pencil case</b> — пенал (не «penal»!). <b>rubber</b> (брит.) = <b>eraser</b> (амер.).','<b>scissors</b> и <b>compasses</b> — только мн. число: <i>a pair of scissors</i>, <i>my scissors are…</i>','<b>highlighter</b> выделяет текст, а <b>marker</b> пишет на доске.']},
+
+ {id:'room',t:'Классная комната',e:'🪑',c:'#f28c28',quiz:true,
+  intro:'Мебель и оборудование класса. Эти слова пригодятся, когда ты будешь описывать комнату.',
+  items:[
+   I('desk','парта','🟫','My desk is near the window.','Моя парта у окна.','a',1),
+   I('chair','стул','🪑','Sit on your chair, please.','Сядь на свой стул, пожалуйста.','a'),
+   I('board','доска','🟩','The teacher writes on the board.','Учитель пишет на доске.','a',1),
+   I('chalk','мел','🖍️','Can I have a piece of chalk?','Можно кусочек мела?','u',1),
+   I('marker','маркер для доски','🖊️','Our teacher uses a black marker.','Наш учитель пользуется чёрным маркером.','a',1),
+   I("teacher's desk",'стол учителя','🟫','The teacher\'s desk is in front of the board.','Стол учителя стоит перед доской.','the',1),
+   I('computer','компьютер','🖥️','There is a computer on the teacher\'s desk.','На столе учителя стоит компьютер.','a'),
+   I('laptop','ноутбук','💻','He has a new laptop.','У него новый ноутбук.','a'),
+   I('projector','проектор','📽️','The projector is on the ceiling.','Проектор висит на потолке.','a'),
+   I('screen','экран','📺','Look at the screen, please.','Посмотрите на экран, пожалуйста.','a'),
+   I('clock','часы (настенные)','🕐','The clock is on the wall.','Часы висят на стене.','a'),
+   I('map','карта','🗺️','There is a map of the world on the wall.','На стене висит карта мира.','a'),
+   I('globe','глобус','🌍','The globe is next to the window.','Глобус стоит рядом с окном.','a'),
+   I('poster','плакат','🖼️','We make a poster about animals.','Мы делаем плакат о животных.','a'),
+   I('window','окно','🪟','Please open the window.','Пожалуйста, открой окно.','a'),
+   I('door','дверь','🚪','The door is open.','Дверь открыта.','a'),
+   I('curtains','шторы','🪟','The curtains are green.','Шторы зелёные.','pl',1),
+   I('wall','стена','🧱','There are pictures on the wall.','На стене висят картинки.','a'),
+   I('floor','пол','⬜','There is a bag on the floor.','На полу лежит сумка.','the',1),
+   I('ceiling','потолок','🔲','There is a light on the ceiling.','На потолке есть лампа.','the',1),
+   I('light','свет, лампа','💡','Turn on the light, please.','Включи свет, пожалуйста.','a'),
+   I('bookcase','книжный шкаф','🗃️','The books are in the bookcase.','Книги стоят в книжном шкафу.','a'),
+   I('cupboard','шкаф','🗄️','The paper is in the cupboard.','Бумага лежит в шкафу.','a'),
+   I('shelf','полка','📚','There is a plant on the shelf.','На полке стоит растение.','a',1),
+   I('bin','мусорное ведро','🗑️','Put the paper in the bin.','Выброси бумагу в ведро.','a'),
+   I('sink','раковина','🚰','Wash your hands in the sink.','Помой руки в раковине.','a'),
+   I('calendar','календарь','📅','There is a calendar next to the board.','Рядом с доской висит календарь.','a'),
+   I('timetable','расписание уроков','🗓️','The timetable is on the wall.','Расписание висит на стене.','a'),
+   I('plant','комнатное растение','🌱','The plant is on the windowsill.','Растение стоит на подоконнике.','a'),
+   I('notice board','доска объявлений','📌','Look at the notice board.','Посмотри на доску объявлений.','a',1)
+  ],
+  usage:[
+   ['There is a map on the wall. There are twenty desks.','На стене карта. В классе двадцать парт.'],
+   ['The globe is next to the window. The bin is near the door.','Глобус рядом с окном. Ведро около двери.'],
+   ['Open / close the door. Turn on / turn off the light.','Открой / закрой дверь. Включи / выключи свет.'],
+   ['Look at the board. Come to the board. Write on the board.','Смотри на доску. Выйди к доске. Пиши на доске.'],
+   ['Our classroom is big and bright.','Наш класс большой и светлый.']],
+  warn:['<b>on the board</b> (написано на доске) и <b>at the board</b> (стоит у доски): <i>Come to the board.</i>','<b>clock</b> — настенные и настольные часы, <b>watch</b> — наручные.','<b>desk</b> — парта или письменный стол, <b>table</b> — обычный стол (в столовой, в библиотеке).','<b>floor</b> и <b>ceiling</b> почти всегда с <b>the</b>: <i>on the floor</i>, <i>on the ceiling</i>.']},
+
+ {id:'places',t:'Места в школе',e:'🏫',c:'#e4473b',quiz:true,
+  intro:'Где мы учимся, едим и играем. После слов часто идёт предлог <b>in</b> или <b>on</b>.',
+  items:[
+   I('school','школа','🏫','Our school is big and new.','Наша школа большая и новая.','a'),
+   I('classroom','класс (комната)','🅰️','Our classroom is on the second floor.','Наш класс на втором этаже.','a'),
+   I('corridor','коридор','🚶','Don\'t run in the corridor!','Не бегай по коридору!','a'),
+   I('assembly hall','актовый зал','🎤','The concert is in the assembly hall.','Концерт проходит в актовом зале.','an'),
+   I('gym','спортзал','🏋️','We play basketball in the gym.','Мы играем в баскетбол в спортзале.','a'),
+   I('sports field','спортивная площадка','🏟️','We run on the sports field.','Мы бегаем на спортивной площадке.','a'),
+   I('playground','детская площадка','🤸','We play on the playground at break.','На перемене мы играем на площадке.','a',1),
+   I('schoolyard','школьный двор','🌳','The schoolyard is full of children.','Школьный двор полон детей.','a'),
+   I('canteen','столовая','🍽️','We have lunch in the canteen.','Мы обедаем в столовой.','a'),
+   I('library','библиотека','📚','I borrow books from the library.','Я беру книги в библиотеке.','a'),
+   I('computer room','компьютерный класс','🖥️','We have ICT in the computer room.','У нас информатика в компьютерном классе.','a',1),
+   I('science lab','кабинет естествознания (лаборатория)','⚗️','We do experiments in the science lab.','Мы проводим опыты в лаборатории.','a'),
+   I('art room','кабинет рисования','🎨','There are pictures in the art room.','В кабинете рисования много картин.','an',1),
+   I('music room','кабинет музыки','🎼','We sing in the music room.','Мы поём в кабинете музыки.','a'),
+   I('staffroom','учительская','☕','The teachers are in the staffroom.','Учителя в учительской.','a'),
+   I("headteacher's office",'кабинет директора','🏢','The headteacher\'s office is on the first floor.','Кабинет директора на втором этаже (брит.: first floor).','the',1),
+   I('cloakroom','гардероб','🧥','We leave our coats in the cloakroom.','Мы оставляем куртки в гардеробе.','a'),
+   I('locker','шкафчик','🔒','My jacket is in my locker.','Моя куртка в моём шкафчике.','a'),
+   I('toilets','туалет','🚻','The toilets are next to the gym.','Туалеты рядом со спортзалом.','pl'),
+   I('stairs','лестница','🪜','The stairs are on the left.','Лестница слева.','pl',1),
+   I('ground floor','первый этаж (брит.)','1️⃣','The canteen is on the ground floor.','Столовая на первом этаже.','the',1),
+   I('entrance','вход','🚪','The main entrance is open.','Главный вход открыт.','an',1)
+  ],
+  usage:[
+   ['We have lunch in the canteen. We read books in the library.','Мы обедаем в столовой. Мы читаем книги в библиотеке. (in the + место)'],
+   ['Where is the gym? — It\'s on the ground floor, next to the canteen.','Где спортзал? — На первом этаже, рядом со столовой.'],
+   ['Go to the library. / Go to school.','Иди в библиотеку. / Иди в школу (учиться, без артикля).'],
+   ['My mum is at school today. (в школе)','at school — в школе (как ученик или работник), in the school — внутри здания.']],
+  warn:['<b>ground floor</b> (брит.) — это наш «первый этаж», а <b>first floor</b> (брит.) — наш «второй». В США <i>first floor</i> = наш первый.','<b>library</b> читается [лАйбрэри], а не «либрари»!','<b>canteen</b> (брит.) = <b>cafeteria</b> (амер.).','<b>go to school</b> — без артикля (идти учиться), <b>go to the school</b> — прийти в здание школы по делу.']},
+
+ {id:'people',t:'Люди в школе',e:'👩‍🏫',c:'#7a4fd8',quiz:true,
+  intro:'Кто учится и работает в школе. После <b>to be</b> и профессий всегда ставим <b>a / an</b>.',
+  items:[
+   I('pupil','ученик, школьник','🧒','There are twenty pupils in my class.','В моём классе двадцать учеников.','a'),
+   I('student','студент; учащийся (амер.)','👨‍🎓','My sister is a university student.','Моя сестра — студентка университета.','a'),
+   I('classmate','одноклассник','👫','My classmate helps me with Maths.','Одноклассник помогает мне с математикой.','a'),
+   I('deskmate','сосед по парте','🤝','I sit with my deskmate.','Я сижу с соседом по парте.','a'),
+   I('friend','друг, подруга','👭','My best friend is in my class.','Мой лучший друг в моём классе.','a'),
+   I('teacher','учитель','👩‍🏫','Our teacher is very kind.','Наш учитель очень добрый.','a'),
+   I('class teacher','классный руководитель','📋','Our class teacher is Mrs Green.','Наш классный руководитель — миссис Грин.','a',1),
+   I('headteacher','директор школы','👨‍💼','The headteacher speaks at the assembly.','Директор выступает на линейке.','a'),
+   I('librarian','библиотекарь','👓','The librarian helps me find a book.','Библиотекарь помогает мне найти книгу.','a'),
+   I('school nurse','школьная медсестра','👩‍⚕️','Go to the school nurse if you feel ill.','Если плохо себя чувствуешь, иди к школьной медсестре.','a'),
+   I('cook','повар','👨‍🍳','The cook makes soup for lunch.','Повар готовит суп на обед.','a'),
+   I('caretaker','рабочий по зданию (завхоз)','🧹','The caretaker cleans the corridors.','Завхоз убирает коридоры.','a'),
+   I('security guard','охранник','💂','The security guard is at the entrance.','Охранник стоит у входа.','a'),
+   I('first-grader','первоклассник','🔢','My brother is a first-grader.','Мой брат — первоклассник.','a'),
+   I('parent','родитель','👪','My parents come to the school meeting.','Мои родители приходят на родительское собрание.','a')
+  ],
+  usage:[
+   ['He is a teacher. She is an engineer.','Он учитель. Она инженер. (профессия → a / an)'],
+   ['Mr Brown is our teacher. Mrs Green is our headteacher.','Перед фамилией с Mr / Mrs / Ms артикль не нужен.'],
+   ['Who is your Maths teacher? — It\'s Mrs Green.','Кто твой учитель математики?'],
+   ['child → children, man → men, woman → women, person → people','Особые формы множественного числа.']],
+  warn:['<b>pupil</b> — школьник (брит.), <b>student</b> — чаще студент или учащийся (амер.).','<b>headteacher</b> (брит.) = <b>principal</b> (амер.).','<b>Mr</b> [мистэ] — мужчина, <b>Mrs</b> [мИсиз] — замужняя женщина, <b>Ms</b> [миз] — любая женщина.']},
+
+ {id:'life',t:'Школьная жизнь',e:'🔔',c:'#e4579a',quiz:true,
+  intro:'Слова про уроки, оценки, каникулы и всё, что происходит в школе.',
+  items:[
+   I('lesson','урок','🔔','The lesson starts at eight.','Урок начинается в восемь.','a'),
+   I('break','перемена','⏰','We play outside at break.','На перемене мы играем на улице.','a'),
+   I('lunch break','большая перемена','🥪','We have a lunch break at twelve.','В двенадцать у нас большая перемена.','a',1),
+   I('homework','домашнее задание','🏠','I do my homework in the evening.','Я делаю домашнее задание вечером.','u'),
+   I('test','тест, контрольная','📝','We have a test on Friday.','В пятницу у нас контрольная.','a'),
+   I('exam','экзамен','🎓','The exam is very difficult.','Экзамен очень трудный.','an'),
+   I('mark','оценка (брит.)','💯','I got a good mark in Maths.','Я получил хорошую оценку по математике.','a'),
+   I('grade','оценка (амер.), класс (амер.)','🅰️','She gets good grades.','Она получает хорошие оценки.','a',1),
+   I('report','табель, отчёт об успеваемости','📄','My report is very good.','Мой табель очень хороший.','a',1),
+   I('term','четверть, триместр','📆','There are four terms in a school year.','В учебном году четыре четверти.','a'),
+   I('holidays','каникулы','🏖️','I love the summer holidays.','Я люблю летние каникулы.','pl'),
+   I('school year','учебный год','📅','The school year starts in September.','Учебный год начинается в сентябре.','a',1),
+   I('uniform','школьная форма','👔','We wear a uniform at school.','В школе мы носим форму.','a'),
+   I('bell','звонок','🛎️','The bell rings at 8.30.','Звонок звенит в 8:30.','a'),
+   I('school bus','школьный автобус','🚌','I go to school by school bus.','Я езжу в школу на школьном автобусе.','a'),
+   I('club','кружок, секция','🎯','I go to the chess club after school.','После школы я хожу в шахматный кружок.','a'),
+   I('project','проект','📊','We are doing a project about space.','Мы делаем проект о космосе.','a'),
+   I('question','вопрос','❓','Ask a question, please.','Задайте вопрос, пожалуйста.','a'),
+   I('answer','ответ','💬','Your answer is correct.','Твой ответ правильный.','an'),
+   I('mistake','ошибка','❌','I made a mistake in my dictation.','Я сделал ошибку в диктанте.','a'),
+   I('dictation','диктант','✍️','We write a dictation every week.','Мы пишем диктант каждую неделю.','a',1),
+   I('assembly','школьная линейка','🎶','We have an assembly on Monday.','В понедельник у нас линейка.','an',1),
+   I('register','журнал посещаемости','✅','The teacher checks the register.','Учитель отмечает посещаемость.','a'),
+   I('page','страница','📃','Open your book at page twelve.','Откройте книгу на двенадцатой странице.','a'),
+   I('team','команда','🏆','Our class team is great.','Наша классная команда отличная.','a')
+  ],
+  usage:[
+   ['I\'m at school. We are in class. (без артикля)','Я в школе. Мы на уроке.'],
+   ['We have a break at ten. I have a lot of homework.','У нас перемена в десять. У меня много домашнего задания.'],
+   ['The lesson starts at eight and lasts 45 minutes.','Урок начинается в восемь и длится 45 минут.'],
+   ['What time does school start? — At 8.30.','Во сколько начинается школа? — В 8:30.']],
+  warn:['<b>homework</b> — неисчисляемое: <i>some homework</i>, не «homeworks».','<b>mark</b> (брит.) и <b>grade</b> (амер.) — оба «оценка».','<b>lesson</b> — урок, <b>class</b> — занятие или класс как группа. <b>holidays</b> — каникулы (мн. число), а <b>a holiday</b> — праздник или отпуск.']},
+
+ {id:'verbs',t:'Что мы делаем',e:'✍️',c:'#2d5bd6',quiz:false,
+  intro:'Глаголы и устойчивые сочетания. Многие из них нужно просто запомнить целиком.',
+  items:[
+   I('do homework','делать домашнее задание','📝','I do my homework after lunch.','Я делаю домашнее задание после обеда.'),
+   I('go to school','ходить в школу','🚶','I go to school by bus.','Я езжу в школу на автобусе.'),
+   I('learn','учить, узнавать','🧠','We learn new words every day.','Мы учим новые слова каждый день.'),
+   I('study','учиться, изучать','📖','She studies Spanish.','Она изучает испанский.'),
+   I('teach','преподавать, учить (кого-то)','👩‍🏫','Mrs Green teaches us Maths.','Миссис Грин преподаёт нам математику.'),
+   I('read','читать','📖','Read the text aloud, please.','Прочитайте текст вслух, пожалуйста.'),
+   I('write','писать','✍️','Write your name on the page.','Напиши своё имя на странице.'),
+   I('draw','рисовать (карандашом)','✏️','I draw a picture of my family.','Я рисую картину своей семьи.'),
+   I('paint','рисовать красками','🖌️','We paint with watercolours.','Мы рисуем акварелью.'),
+   I('count','считать','🔢','Count from one to twenty.','Считай от одного до двадцати.'),
+   I('listen','слушать','👂','Listen to the teacher carefully.','Внимательно слушай учителя.'),
+   I('ask a question','задать вопрос','❓','Raise your hand and ask a question.','Подними руку и задай вопрос.'),
+   I('answer a question','ответить на вопрос','💬','Can you answer this question?','Ты можешь ответить на этот вопрос?'),
+   I('make a mistake','сделать ошибку','❌','Everyone makes mistakes.','Все делают ошибки.'),
+   I('take a test','писать (сдавать) тест','📝','We take a test every month.','Мы пишем тест каждый месяц.'),
+   I('pass / fail a test','сдать / не сдать тест','✅','I passed the Maths test!','Я сдал тест по математике!'),
+   I('get a good mark','получить хорошую оценку','💯','She always gets good marks.','Она всегда получает хорошие оценки.'),
+   I('revise (for a test)','повторять (к тесту)','🔁','I revise for the test at home.','Я повторяю материал к тесту дома.'),
+   I('learn by heart','учить наизусть','💡','We learn a poem by heart.','Мы учим стихотворение наизусть.'),
+   I('copy','переписывать, списывать с доски','📋','Copy the words into your notebook.','Перепиши слова в блокнот.'),
+   I('cheat','списывать, жульничать','🙈','Don\'t cheat in the test!','Не списывай на контрольной!'),
+   I('be late (for school)','опаздывать (в школу)','⏰','Sorry, I\'m late for the lesson.','Извините, я опоздал на урок.'),
+   I('miss a lesson','пропустить урок','🚫','I was ill, so I missed a lesson.','Я болел, поэтому пропустил урок.'),
+   I('raise your hand','поднять руку','🙋','Raise your hand if you know the answer.','Подними руку, если знаешь ответ.'),
+   I('work in pairs / groups','работать в парах / группах','👥','Work in pairs, please.','Работайте в парах, пожалуйста.'),
+   I('hand in','сдавать (работу учителю)','📥','Hand in your homework, please.','Сдайте домашнее задание, пожалуйста.'),
+   I('spell','называть по буквам','🔤','How do you spell "library"?','Как пишется слово «library»?')
+  ],
+  usage:[
+   ['do + homework / an exercise / a project','делать домашнее задание / упражнение / проект'],
+   ['make + a mistake','сделать ошибку (не «do a mistake»)'],
+   ['take + a test / an exam','писать тест / сдавать экзамен'],
+   ['get + a (good / bad) mark','получить (хорошую / плохую) оценку'],
+   ['ask / answer + a question','задать / ответить на вопрос']],
+  warn:['<b>learn</b> — учить сам, <b>teach</b> — учить кого-то, <b>study</b> — учиться, изучать предмет.','«Писать тест» по-английски — <b>take a test</b>, а не «write a test».','<b>copy</b> — переписывать (с доски в тетрадь), <b>cheat</b> — списывать у соседа (нечестно).']},
+
+ {id:'phrases',t:'Фразы урока',e:'💬',c:'#f28c28',quiz:false,
+  intro:'Фразы, которые говорит учитель, и фразы, которые нужны ученику. Выучи их, чтобы уверенно общаться на уроке.',
+  items:[],
+  bub:{t:[
+   ['Open your books at page 10.','Откройте учебники на странице 10.'],['Close your books.','Закройте книги.'],['Listen carefully.','Слушайте внимательно.'],
+   ['Repeat after me.','Повторяйте за мной.'],['Work in pairs / in groups.','Работайте в парах / группах.'],['Hands up!','Поднимите руки!'],
+   ['Be quiet, please.','Тише, пожалуйста.'],['Stand up. / Sit down.','Встаньте. / Садитесь.'],['Come to the board.','Выходи к доске.'],
+   ['Write it down.','Запишите это.'],['Take out your notebooks.','Достаньте тетради.'],['Hand in your homework.','Сдайте домашнее задание.'],
+   ['Look at the board.','Смотрите на доску.'],['Read the text aloud.','Прочитайте текст вслух.'],['Don\'t talk, please.','Не разговаривайте, пожалуйста.'],['Well done!','Молодец! Отлично!']],
+  p:[
+   ['May I come in?','Можно войти?'],['May I go out, please?','Можно выйти?'],['Sorry, I\'m late.','Извините, я опоздал.'],
+   ['Can you repeat that, please?','Повторите, пожалуйста.'],['I don\'t understand.','Я не понимаю.'],['How do you spell …?','Как пишется …?'],
+   ['What does … mean?','Что значит …?'],['How do you say … in English?','Как сказать … по-английски?'],['I\'ve forgotten my book.','Я забыл свою книгу.'],
+   ['Can I borrow your pen?','Можно взять твою ручку?'],['What page is it?','Какая страница?'],['Is this right?','Это правильно?'],
+   ['Can you help me, please?','Вы можете мне помочь?'],['I\'ve finished!','Я закончил!'],['Sorry, I don\'t know.','Извините, я не знаю.'],['Thank you, Mrs Green.','Спасибо, миссис Грин.']]},
+  usage:[['May I … ? / Can I … ?','May — более вежливо: May I come in? Can — проще: Can I borrow your pen?'],['Please / Thank you / Sorry','Эти слова добавляй всегда!']],
+  warn:['Когда обращаешься к учителю, говори <b>Mr / Mrs / Ms + фамилия</b>: <i>Thank you, Mrs Green.</i>']}
+];
+
+/* ================= VOCAB RENDER ================= */
+const TAGTXT={a:'a',an:'an',the:'the'};
+function tagHtml(it){
+  if(it.art==='a'||it.art==='an'||it.art==='the') return `<span class="tg">${it.art} ${it.w.split(' (')[0]}</span>`;
+  if(it.art==='pl') return `<span class="tg pl">мн. число</span>`;
+  if(it.art==='u') return `<span class="tg u">неисчисляемое</span>`;
+  if(it.art==='z') return `<span class="tg z">Ø без артикля</span>`;
+  return '';
+}
+function renderVocab(){
+  let total=0;
+  SEC.forEach((s,k)=>{
+    const n = s.bub ? s.bub.t.length+s.bub.p.length : s.items.length; total+=n; s.n=n;
+    const pill=document.createElement('div'); pill.className='sub'+(k===0?' on':''); pill.style.setProperty('--c',s.c);
+    pill.innerHTML=`${s.e} ${s.t} <small>${n}</small>`; pill.onclick=()=>showVS(k); $('subtabs').appendChild(pill);
+    const sec=document.createElement('div'); sec.className='vsec'+(k===0?' on':''); sec.id='vs'+k; sec.style.setProperty('--c',s.c);
+    let h=`<div class="card vhead"><h2>${s.e} ${s.t}</h2><p>${s.intro}</p><p class="muted">${n} ${s.bub?'фраз':'слов и выражений'}</p></div>`;
+    if(s.bub){
+      h+=`<div class="card"><div class="who">👩‍🏫 Учитель говорит</div>`+s.bub.t.map(b=>`<div class="bub t"><button class="say" data-say="${b[0].replace(/"/g,'&quot;')}">🔊</button><div><b>${b[0]}</b><small>${b[1]}</small></div></div>`).join('')
+        +`<div class="who">🧒 Ученик говорит</div>`+s.bub.p.map(b=>`<div class="bub p"><button class="say" data-say="${b[0].replace(/"/g,'&quot;')}">🔊</button><div><b>${b[0]}</b><small>${b[1]}</small></div></div>`).join('')+`</div>`;
+    } else {
+      h+=`<div class="wgrid">`+s.items.map(it=>`<div class="wc"><div class="we">${it.e}</div><div><div class="wt"><b>${it.w}</b>${tagHtml(it)}<button class="say" data-say="${it.w.replace(/"/g,'&quot;').replace(/\(.*\)/,'')}">🔊</button></div><div class="wr">${it.ru}</div><div class="wx">${it.ex}<i>${it.exru}</i></div></div></div>`).join('')+`</div>`;
+    }
+    h+=`<div class="usage"><h4>🧩 Как использовать</h4><ul>`+s.usage.map(u=>`<li><b>${u[0]}</b><span>${u[1]}</span></li>`).join('')+`</ul></div>`;
+    h+=`<div class="warn"><h4>⚠️ Осторожно, ловушки</h4><ul>`+s.warn.map(w=>`<li>${w}</li>`).join('')+`</ul></div>`;
+    sec.innerHTML=h; $('vbody').appendChild(sec);
+  });
+  $('wcount').textContent=total;
+  return total;
+}
+function showVS(k){
+  document.querySelectorAll('.vsec').forEach((el,i)=>el.classList.toggle('on',i===k));
+  document.querySelectorAll('.sub').forEach((el,i)=>el.classList.toggle('on',i===k));
+}
+const TOTAL=renderVocab();
+
+/* start steps */
+[['📚','Словарь','Читаем слова, слушаем 🔊 и переписываем в тетрадь',1,'#2d5bd6'],['🧱','Грамматика','there is/are, предлоги места, артикли, множественное число',2,'#7a4fd8'],
+ ['🎮','Тренировка слов','Семь разных заданий на новые слова',3,'#2ea36b'],['🏠','Опиши комнату','7 комнат школы: смотрим и описываем по-английски',4,'#f28c28'],['🔁','Артикли ∞','Бесконечный тренажёр с серией без ошибок',5,'#e4473b']].forEach((s,k)=>{
+  const d=document.createElement('div'); d.className='step'; d.style.setProperty('--c',s[4]); d.onclick=()=>goTo(s[3]);
+  d.innerHTML=`<div class="n">${k+1}</div><b>${s[0]} ${s[1]}</b><span>${s[2]}</span>`; $('steps').appendChild(d);
+});
+
+/* ================= quiz builder ================= */
+function buildQuiz(id,items,o={}){
+  const box=$(id); box.innerHTML=''; let ok=0,done=0; const total=items.length;
+  const score=document.createElement('div'); score.className='mini-score';
+  const upd=()=>{score.textContent=`Верно: ${ok} из ${total}`+(done===total?' — задание пройдено 🎉':'');};
+  items.forEach((it,idx)=>{
+    const isGap=typeof it.s==='string';
+    const q=document.createElement('div'); q.className='quiz-q';
+    const qt=document.createElement('div'); qt.className='qtext';
+    qt.innerHTML=(idx+1)+'. '+(isGap?it.s.replace('___','<span class="gap">&nbsp;&nbsp;&nbsp;</span>'):it.q);
+    const ob=document.createElement('div'); ob.className='opts';
+    const fb=document.createElement('div'); fb.className='fb';
+    const correct=isGap?it.ans:it.opts[it.a];
+    const opts=isGap?ARTS.slice():(o.noShuffle?it.opts.slice():shuffle(it.opts));
+    opts.forEach(op=>{
+      const b=document.createElement('button'); b.className='opt'; b.textContent=isGap?label(op):op;
+      b.onclick=()=>{
+        ob.querySelectorAll('.opt').forEach(x=>x.disabled=true); done++;
+        const full=isGap?fill(it.s,it.ans)+' — ':'';
+        if(op===correct){b.classList.add('ok'); ok++; fb.className='fb show ok'; fb.textContent='✅ Верно! '+full+it.why;}
+        else{b.classList.add('bad'); ob.querySelectorAll('.opt').forEach(x=>{if(x.textContent===(isGap?label(correct):correct)) x.classList.add('ok');}); fb.className='fb show bad'; fb.textContent='❌ Не совсем. '+full+it.why;}
+        upd();
+      };
+      ob.appendChild(b);
+    });
+    q.append(qt,ob,fb); box.appendChild(q);
+  });
+  box.appendChild(score); upd();
+}
+
+/* ================= grammar mini-checks & prepositions lab ================= */
+function simpleQ(id,items){buildQuiz(id,items.map(x=>({q:x[0],opts:x[1],a:0,why:x[2]})));}
+simpleQ('g1',[
+  ['There ___ a clock on the wall.',['is','are'],'Единственное число → there is.'],
+  ['There ___ three bags on the floor.',['are','is'],'Множественное число → there are.'],
+  ['___ there any pencils in the pencil case?',['Are','Is'],'pencils — множественное → Are there any…?'],
+  ['There aren\'t ___ desks in the library.',['any','some'],'В отрицании используем any.']
+]);
+simpleQ('g2',[
+  ['The ruler is ___ the pencil case. (внутри)',['in','on','under'],'in — внутри.'],
+  ['The map is ___ the wall. (на стене)',['on','in','under'],'on the wall — на стене.'],
+  ['My bag is ___ the desk. (под партой)',['under','above','between'],'under — под.'],
+  ['The clock is ___ the board. (над доской)',['above','behind','near'],'above — над.']
+]);
+simpleQ('g4',[
+  ['___ is my desk. (рядом, ед. число)',['This','That','These'],'Рядом и один предмет → this.'],
+  ['___ are your books. (далеко, мн. число)',['Those','These','That'],'Далеко и много → those.'],
+  ['What is ___? (то, далеко)',['that','this','these'],'that — далеко, один предмет.']
+]);
+simpleQ('g5',[
+  ['Множественное число слова diary:',['diaries','diarys','diaryes'],'Согласная + y → ies.'],
+  ['Множественное число слова box:',['boxes','boxs','boxies'],'После x добавляем es.'],
+  ['Множественное число слова child:',['children','childs','childes'],'Исключение: child → children.'],
+  ['Множественное число слова shelf:',['shelves','shelfs','shelfes'],'f → ves.']
+]);
+simpleQ('g6',[
+  ['Выбери правильный порядок:',['a big green board','a green big board','big a green board'],'Сначала размер, потом цвет: a big green board.'],
+  ['Выбери правильное предложение:',['The classroom is big and bright.','The classroom big and bright.','The classroom are big and bright.'],'После is идут прилагательные.']
+]);
+
+const PL=[
+ {p:'on',s:'The ball is on the desk.',x:28,y:40},{p:'under',s:'The ball is under the desk.',x:28,y:77},
+ {p:'in front of',s:'The ball is in front of the desk.',x:28,y:88,big:1},{p:'behind',s:'The ball is behind the desk.',x:28,y:54,z:1},
+ {p:'next to',s:'The ball is next to the desk.',x:47,y:66},{p:'between',s:'The ball is between the desk and the cupboard.',x:53,y:68},
+ {p:'in',s:'The ball is in the cupboard.',x:75,y:55},{p:'above',s:'The ball is above the desk.',x:28,y:22},{p:'near',s:'The ball is near the cupboard.',x:62,y:82}
+];
+PL.forEach((o,i)=>{
+  const b=document.createElement('button'); b.className='btn sm'+(i?' ghost':''); b.style.setProperty('--acc','#7a4fd8'); b.textContent=o.p;
+  b.onclick=()=>{
+    const ball=$('ball'); ball.style.left=o.x+'%'; ball.style.top=o.y+'%'; ball.style.zIndex=o.z?'0':'3'; ball.style.fontSize=o.big?'11cqw':'8cqw';
+    $('labSent').textContent=o.s; $('labSay').dataset.say=o.s;
+    document.querySelectorAll('#labBtns .btn').forEach(x=>x.classList.add('ghost')); b.classList.remove('ghost');
+  };
+  $('labBtns').appendChild(b);
+});
+
+/* ================= TRAINING ================= */
+const POOL=[]; SEC.filter(s=>s.quiz).forEach(s=>s.items.forEach(it=>POOL.push(Object.assign({sec:s.id},it))));
+const seenE=new Set();
+const EPOOL=POOL.filter(it=>{ if(!it.e||it.x||seenE.has(it.e)) return false; seenE.add(it.e); return true; });
+const nm=it=>it.w.split(' (')[0];
+
+function buildTraining(){
+  /* 1 picture */
+  const e1=shuffle(EPOOL).slice(0,10).map(it=>{
+    const same=shuffle(EPOOL.filter(x=>x.w!==it.w&&x.sec===it.sec)); const rest=shuffle(EPOOL.filter(x=>x.w!==it.w&&x.sec!==it.sec));
+    const wrong=same.concat(rest).slice(0,3).map(nm); const opts=[nm(it)].concat(wrong);
+    return {q:`<span class="bigemo">${it.e}</span> Что это?`,opts,a:0,why:`${nm(it)} — ${it.ru}. ${it.ex}`};
+  });
+  buildQuiz('e1',e1);
+  /* 2 word -> ru */
+  const e2=shuffle(POOL).slice(0,8).map(it=>{
+    const wrong=shuffle(POOL.filter(x=>x.ru!==it.ru&&x.sec===it.sec)).slice(0,2).map(x=>x.ru);
+    return {q:`<b>${nm(it)}</b> — это…`,opts:[it.ru].concat(wrong),a:0,why:it.ex+' — '+it.exru};
+  });
+  buildQuiz('e2',e2);
+  /* 3 typing */
+  const spellPool=EPOOL.filter(it=>/^[a-z\- ]+$/i.test(nm(it))&&nm(it).length<=13);
+  buildType('e3',shuffle(spellPool).slice(0,8).map(it=>{
+    const acc=[nm(it).toLowerCase()]; const m=it.w.match(/\((.*)\)/); if(m) acc.push(m[1].toLowerCase());
+    return {e:it.e,ru:it.ru,acc,w:nm(it)};
+  }));
+  /* 4 sorter */
+  const secs=shuffle(SEC.filter(s=>s.quiz&&['subjects','case','room','places','people'].includes(s.id))).slice(0,4);
+  const chips=[]; secs.forEach(s=>shuffle(s.items.filter(it=>nm(it).length<=16)).slice(0,3).forEach(it=>chips.push({w:nm(it),k:s.id})));
+  buildSorter('e4',secs.map(s=>({k:s.id,label:s.e+' '+s.t})),chips);
+  /* 5 odd one out */
+  buildQuiz('e5',shuffle(ODD).slice(0,6).map(x=>({q:'Какое слово лишнее? '+x.set.join(' · '),opts:x.set,a:x.set.indexOf(x.odd),why:x.why})));
+  /* 6 sentences */
+  buildQuiz('e6',shuffle(SENT).slice(0,8).map(x=>({q:x.q,opts:x.o,a:0,why:x.q.replace('___','<b>'+x.o[0]+'</b>').replace(/<\/?b>/g,'')})));
+  /* 7 timetable */
+  buildTimetable('e7');
+}
+const ODD=[
+ {set:['pen','pencil','ruler','window'],odd:'window',why:'pen, pencil, ruler лежат в пенале, а window — часть классной комнаты.'},
+ {set:['Maths','History','Art','desk'],odd:'desk',why:'Maths, History, Art — предметы, а desk — мебель.'},
+ {set:['library','canteen','gym','pencil'],odd:'pencil',why:'library, canteen, gym — места в школе.'},
+ {set:['teacher','librarian','cook','ruler'],odd:'ruler',why:'teacher, librarian, cook — люди, ruler — предмет.'},
+ {set:['board','clock','map','scissors'],odd:'scissors',why:'board, clock, map висят на стене, scissors лежат в пенале.'},
+ {set:['lesson','break','homework','floor'],odd:'floor',why:'lesson, break, homework — школьная жизнь, floor — часть комнаты.'},
+ {set:['chair','desk','bookcase','rubber'],odd:'rubber',why:'chair, desk, bookcase — мебель, rubber (ластик) — канцелярия.'},
+ {set:['English','Chemistry','Music','playground'],odd:'playground',why:'English, Chemistry, Music — предметы, playground — место.'},
+ {set:['headteacher','pupil','nurse','corridor'],odd:'corridor',why:'headteacher, pupil, nurse — люди, corridor — место.'},
+ {set:['diary','textbook','exercise book','bin'],odd:'bin',why:'diary, textbook, exercise book — то, что мы читаем и пишем; bin — мусорное ведро.'}
+];
+const SENT=[
+ {q:'We write on the ___.',o:['board','bin','clock']},{q:'I cut paper with ___.',o:['scissors','a ruler','glue']},
+ {q:'The ___ helps us find books in the library.',o:['librarian','cook','nurse']},{q:'We have lunch in the ___.',o:['canteen','gym','library']},
+ {q:'The ___ rings at the end of the lesson.',o:['bell','map','desk']},{q:'I draw straight lines with a ___.',o:['ruler','brush','rubber']},
+ {q:'We keep our pencils in a ___.',o:['pencil case','lunch box','folder']},{q:'We play basketball in the ___.',o:['gym','library','corridor']},
+ {q:'Wash the paint brush in the ___.',o:['sink','bin','cupboard']},{q:'Turn on the ___, it is dark.',o:['light','window','door']},
+ {q:'The teacher checks the ___ every morning.',o:['register','mark','page']},{q:'If you feel ill, go to the school ___.',o:['nurse','cook','librarian']},
+ {q:'I got a good ___ in History.',o:['mark','test','term']},{q:'Write your homework in your ___.',o:['diary','calculator','globe']}
+];
+function buildType(id,items){
+  const box=$(id); box.innerHTML='';
+  items.forEach(it=>{
+    const r=document.createElement('div'); r.className='typerow';
+    r.innerHTML=`<div class="e">${it.e}</div><div class="r">${it.ru}</div>`;
+    const inp=document.createElement('input'); inp.placeholder='слово по-английски'; inp.autocomplete='off'; inp.spellcheck=false; r.appendChild(inp);
+    const fb=document.createElement('span'); fb.className='muted'; r.appendChild(fb); r._it=it; r._inp=inp; r._fb=fb; box.appendChild(r);
+  });
+  const sc=document.createElement('div'); sc.className='mini-score'; const b=document.createElement('button'); b.className='btn sm'; b.textContent='Проверить'; b.style.setProperty('--acc','#2ea36b');
+  b.onclick=()=>{
+    let ok=0; box.querySelectorAll('.typerow').forEach(r=>{
+      const v=r._inp.value.trim().toLowerCase().replace(/\s+/g,' '); const good=r._it.acc.includes(v);
+      r._inp.className=good?'ok':'bad'; r._fb.textContent=good?'✅':'→ '+r._it.w; if(good) ok++;
+    });
+    sc.textContent=`Верно: ${ok} из ${items.length}`+(ok===items.length?' 🎉':'');
+  };
+  box.append(b,sc);
+}
+function buildSorter(id,bins,chips){
+  const box=$(id); box.innerHTML=''; let sel=null;
+  const pool=document.createElement('div'); pool.className='pool';
+  const wrap=document.createElement('div'); wrap.className='bins';
+  const fb=document.createElement('div'); fb.className='fb';
+  bins.forEach(b=>{
+    const d=document.createElement('div'); d.className='bin'; d.dataset.k=b.k; d.innerHTML=`<h4>${b.label}</h4><div class="bin-body"></div>`;
+    d.onclick=()=>{ if(!sel) return; d.querySelector('.bin-body').appendChild(sel); sel.classList.remove('sel'); sel=null; };
+    wrap.appendChild(d);
+  });
+  shuffle(chips).forEach(c=>{
+    const ch=document.createElement('div'); ch.className='chip'; ch.textContent=c.w; ch.dataset.k=c.k;
+    ch.onclick=e=>{ e.stopPropagation();
+      if(ch.parentElement.classList.contains('bin-body')){ ch.className='chip'; pool.appendChild(ch); return; }
+      if(sel&&sel!==ch) sel.classList.remove('sel'); ch.classList.toggle('sel'); sel=ch.classList.contains('sel')?ch:null; };
+    pool.appendChild(ch);
+  });
+  const row=document.createElement('div'); row.className='row'; row.style.marginTop='12px';
+  const bc=document.createElement('button'); bc.className='btn sm'; bc.style.setProperty('--acc','#2ea36b'); bc.textContent='Проверить';
+  bc.onclick=()=>{
+    if(pool.children.length){fb.className='fb show bad'; fb.textContent='Сначала разложи все слова: осталось '+pool.children.length+'.'; return;}
+    let ok=0,total=0; wrap.querySelectorAll('.bin').forEach(bn=>bn.querySelectorAll('.chip').forEach(c=>{total++; if(c.dataset.k===bn.dataset.k){c.className='chip ok'; ok++;} else c.className='chip bad';}));
+    fb.className='fb show '+(ok===total?'ok':'bad'); fb.textContent=ok===total?'🎉 Все слова на своих местах!':`Верно: ${ok} из ${total}. Красные слова верни (нажми на них) и разложи по-другому.`;
+  };
+  row.appendChild(bc); box.append(pool,wrap,row,fb);
+}
+function buildTimetable(id){
+  const days=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+  const subj=['Maths','English','PE','Art','Music','Science','History','Geography','ICT','Drama','Russian','Spelling'];
+  // build timetable ensuring each day has 4 distinct subjects
+  const tt={}; days.forEach(d=>{tt[d]=shuffle(subj).slice(0,4);});
+  const box=$(id); box.innerHTML='';
+  let h='<table class="tt"><tr><th></th>'+days.map(d=>`<th>${d}</th>`).join('')+'</tr>';
+  for(let i=0;i<4;i++) h+=`<tr><th>${i+1}</th>`+days.map(d=>`<td>${tt[d][i]}</td>`).join('')+'</tr>';
+  h+='</table><p class="muted">Урок 1, 2, 3, 4 — по порядку сверху вниз.</p><div id="e7q"></div>';
+  box.innerHTML=h;
+  const ord=['first','second','third','fourth']; const qs=[];
+  for(let n=0;n<2;n++){ const d=pick(days), i=Math.floor(Math.random()*4);
+    const correct=tt[d][i]; const opts=[correct].concat(shuffle(subj.filter(s=>s!==correct)).slice(0,3));
+    qs.push({q:`What is the <b>${ord[i]}</b> lesson on ${d}?`,opts,a:0,why:`On ${d} the ${ord[i]} lesson is ${correct}.`}); }
+  const count={}; days.forEach(d=>tt[d].forEach(s=>count[s]=(count[s]||0)+1));
+  const once=Object.keys(count).filter(s=>count[s]===1); const multi=Object.keys(count).filter(s=>count[s]>=2);
+  if(once.length){ const s=pick(once); const d=days.find(x=>tt[x].includes(s));
+    qs.push({q:`On which day do they have <b>${s}</b>?`,opts:[d].concat(shuffle(days.filter(x=>x!==d)).slice(0,3)),a:0,why:`They have ${s} on ${d}.`}); }
+  if(multi.length){ const s=pick(multi); const c=count[s];
+    const opts=[String(c)].concat(shuffle([1,2,3,4,5].filter(x=>x!==c)).slice(0,3).map(String));
+    qs.push({q:`How many <b>${s}</b> lessons are there in the week?`,opts,a:0,why:`There are ${c} ${s} lessons.`}); }
+  const q2=document.createElement('div'); q2.id='e7qq'; $('e7q').appendChild(q2); buildQuiz('e7qq',qs);
+}
+
+/* ================= ROOMS ================= */
+const E_=(n,e,x,y,s,p)=>({t:'e',n,e,x,y,s,p});
+const B_=(n,x,y,w,h,c,p,txt,ic)=>({t:'b',n,x,y,w,h,c,p,txt,ic});
+const SCENES=[
+ {id:'class',n:'Классная комната',en:'The classroom',e:'🏫',wall:'#dff0f7',floor:'#d9b383',split:56,
+  objs:[B_('board',50,27,34,24,'#2f6a56','boards','ABC  1 2 3','🟩'),E_('clock','🕐',76,10,6),E_('map','🗺️',16,24,9),E_('window','🪟',80,30,10,'windows'),E_('window','🪟',92,30,10,'windows'),E_('door','🚪',6,50,13),
+    B_("teacher's desk",50,50,14,7,'#a8733d','teacher\'s desks','','🟫'),E_('globe','🌍',45,45,5),E_('teacher','👩‍🏫',63,44,8),
+    B_('desk',28,70,14,7,'#c58b4a','desks','','🟫'),B_('desk',50,70,14,7,'#c58b4a','desks'),B_('desk',72,70,14,7,'#c58b4a','desks'),
+    B_('desk',28,86,14,7,'#c58b4a','desks'),B_('desk',50,86,14,7,'#c58b4a','desks'),B_('desk',72,86,14,7,'#c58b4a','desks'),
+    E_('chair','🪑',28,78,5,'chairs'),E_('chair','🪑',50,78,5,'chairs'),E_('chair','🪑',72,78,5,'chairs'),E_('chair','🪑',28,94,5,'chairs'),E_('chair','🪑',50,94,5,'chairs'),E_('chair','🪑',72,94,5,'chairs'),
+    E_('school bag','🎒',12,86,6,'school bags'),E_('school bag','🎒',88,86,6,'school bags'),E_('bin','🗑️',93,60,5)],
+  kw:['board','clock','map','window','door','desk','chair','globe','teacher','bag','bin'],
+  facts:[{q:'Where is the globe?',o:["on the teacher's desk",'under the chair','in the bin'],why:"The globe is on the teacher's desk."},
+         {q:'Where is the clock?',o:['on the wall, above the windows','on the floor',"on the teacher's desk"],why:'The clock is on the wall above the windows.'},
+         {q:'Where are the school bags?',o:['on the floor','on the board','on the window'],why:'The school bags are on the floor.'},
+         {q:'Where is the teacher?',o:["next to the teacher's desk",'behind the door','in the bag'],why:"The teacher is next to the teacher's desk."}],
+  model:"This is our classroom. It is big and bright. There is a green board on the wall, and there is a clock above the windows. There are two windows on the right. On the left there is a map and a door. The teacher is next to the teacher's desk. There is a globe on the teacher's desk. There are six desks and six chairs for the pupils. There are two school bags on the floor. There is a bin near the right wall. I like our classroom because it is cosy."},
+ {id:'lib',n:'Библиотека',en:'The library',e:'📚',wall:'#f1e4d0',floor:'#b98c5c',split:55,
+  objs:[B_('bookshelf',14,36,16,36,'#9b6a3c','bookshelves','📚 📚 📚','📚'),B_('bookshelf',32,36,16,36,'#9b6a3c','bookshelves','📚 📚 📚'),E_('plant','🌱',6,58,6),
+    B_('table',55,70,34,12,'#b8793f','tables','','🟫'),E_('chair','🪑',42,59,5,'chairs'),E_('chair','🪑',68,59,5,'chairs'),E_('chair','🪑',42,82,5,'chairs'),E_('chair','🪑',68,82,5,'chairs'),
+    E_('book','📖',46,67,4,'books'),E_('book','📖',64,67,4,'books'),E_('computer','🖥️',55,64,5),E_('lamp','💡',55,11,5),B_('sign',72,14,18,8,'#fffbe8','signs','QUIET!','🪧'),
+    E_('clock','🕐',92,11,5),E_('window','🪟',90,29,9,'windows'),E_('librarian','👩‍💼',86,52,8),E_('girl','👧',24,62,7,'girls'),E_('boy','👦',82,70,7,'boys')],
+  kw:['bookshel','table','chair','book','computer','librarian','lamp','plant','window','clock','girl','boy','sign'],
+  facts:[{q:'Where is the plant?',o:['near the bookshelves, on the left','on the table','next to the window'],why:'The plant is near the bookshelves, on the left.'},
+         {q:'Where is the librarian?',o:['near the window','under the table','behind the bookshelf'],why:'The librarian is near the window.'},
+         {q:'Where is the computer?',o:['on the table, between the books','under the table','on the bookshelf'],why:'The computer is on the table, between the books.'},
+         {q:'Where are the open books?',o:['on the table','on the floor','in the bin'],why:'The books are on the table.'}],
+  model:"This is the school library. It is quiet and cosy. There are two big bookshelves on the left, and there is a plant near them. There is a table in the middle of the library, and there are four chairs around it. There are two open books on the table, and there is a computer between the books. A girl is standing near the bookshelves. The librarian is near the window, and a boy is next to her. There is a lamp on the wall and a sign: QUIET! I like the library because it is calm."},
+ {id:'can',n:'Столовая',en:'The canteen',e:'🍽️',wall:'#fbe9d0',floor:'#e0b27c',split:48,
+  objs:[B_('counter',50,26,56,12,'#9aa5b5','counters','','⬜'),E_('cook','👨‍🍳',50,16,8),E_('pizza','🍕',30,23,5),E_('apple','🍎',42,23,5),E_('salad','🥗',54,23,5),E_('pasta','🍝',66,23,5),E_('glass of milk','🥛',76,23,5,'glasses of milk'),
+    B_('table',20,64,20,9,'#c9894a','tables','','🟫'),B_('table',50,64,20,9,'#c9894a','tables'),B_('table',80,64,20,9,'#c9894a','tables'),
+    E_('chair','🪑',14,75,5,'chairs'),E_('chair','🪑',26,75,5,'chairs'),E_('chair','🪑',44,75,5,'chairs'),E_('chair','🪑',56,75,5,'chairs'),E_('chair','🪑',74,75,5,'chairs'),E_('chair','🪑',86,75,5,'chairs'),
+    E_('plate','🍽️',20,62,4,'plates'),E_('plate','🍽️',50,62,4,'plates'),E_('plate','🍽️',80,62,4,'plates'),
+    E_('window','🪟',10,22,9,'windows'),B_('menu board',90,20,16,12,'#2f6a56','menu boards','MENU','📋'),E_('clock','🕐',22,9,5),E_('bin','🗑️',93,86,5)],
+  kw:['counter','cook','pizza','apple','salad','pasta','milk','table','chair','plate','menu','window','clock','bin'],
+  facts:[{q:'Where is the cook?',o:['behind the counter','under the table','next to the bin'],why:'The cook is behind the counter.'},
+         {q:'What is on the counter?',o:['pizza, an apple, a salad, pasta and a glass of milk','books and pens','balls and mats'],why:'There is pizza, an apple, a salad, pasta and a glass of milk on the counter.'},
+         {q:'Where are the plates?',o:['on the tables','on the floor','on the counter'],why:'The plates are on the tables.'},
+         {q:'Where is the menu board?',o:['on the wall, on the right','under the window','behind the cook'],why:'The menu board is on the wall, on the right.'}],
+  model:"This is our school canteen. There is a long counter at the back, and a cook is behind it. There is some pizza, an apple, a salad, some pasta and a glass of milk on the counter. There are three tables and six chairs in the canteen. There is a plate on each table. There is a window on the left and a menu board on the right. There is a clock on the wall and a bin in the corner. At lunchtime the canteen is noisy and busy."},
+ {id:'gym',n:'Спортзал',en:'The gym',e:'🏋️',wall:'#e3eefc',floor:'#e9c27a',split:50,
+  objs:[E_('goal','🥅',50,24,14),B_('wall bars',10,32,12,30,'#c99a52','wall bars','▥▥▥','🪜'),B_('bench',26,48,18,4,'#9b6a3c','benches','','🟫'),B_('bench',74,48,18,4,'#9b6a3c','benches'),
+    E_('football','⚽',30,70,5,'footballs'),E_('football','⚽',44,78,5,'footballs'),E_('football','⚽',64,72,5,'footballs'),E_('basketball','🏀',20,60,5,'basketballs'),E_('basketball','🏀',80,62,5,'basketballs'),E_('volleyball','🏐',88,78,5),
+    B_('mat',18,88,24,8,'#3f74d8','mats','','🟦'),B_('mat',80,90,24,8,'#3f74d8','mats'),E_('PE teacher','🏃',52,56,8),E_('clock','🕐',80,10,5),E_('cup','🏆',90,24,6,'cups')],
+  kw:['goal','bars','bench','football','basketball','volleyball','mat','teacher','clock','cup'],
+  facts:[{q:'Where is the goal?',o:['at the back, in the middle of the wall','under the bench','next to the mat'],why:'The goal is at the back, in the middle of the wall.'},
+         {q:'Where are the mats?',o:['on the floor, at the front','on the wall','in the goal'],why:'The mats are on the floor, at the front.'},
+         {q:'Where is the cup?',o:['on the wall, on the right','on the floor','behind the goal'],why:'The cup is on the wall, on the right.'},
+         {q:'Where is the PE teacher?',o:['in the middle of the gym','under the mat','behind the clock'],why:'The PE teacher is in the middle of the gym.'}],
+  model:"This is our gym. It is big and light. There is a goal on the back wall and there are wall bars on the left. There are two benches near the walls. There are three footballs, two basketballs and a volleyball on the floor. There are two blue mats at the front. The PE teacher is in the middle of the gym. There is a cup on the wall on the right, and there is a clock near it. I like PE because we play games."},
+ {id:'art',n:'Кабинет рисования',en:'The art room',e:'🎨',wall:'#fff3d6',floor:'#cfa97a',split:56,
+  objs:[E_('picture','🖼️',50,15,7,'pictures'),E_('picture','🖼️',66,15,7,'pictures'),E_('picture','🖼️',82,15,7,'pictures'),B_('easel',24,46,13,26,'#c98f55','easels','','🖼️'),E_('painting','🖼️',24,38,6),
+    E_('art teacher','👩‍🎨',12,58,8),B_('table',36,72,32,10,'#b8793f','tables','','🟫'),B_('table',76,76,30,10,'#b8793f','tables'),
+    E_('palette','🎨',26,69,5,'palettes'),E_('brush','🖌️',34,69,5,'brushes'),E_('pair of scissors','✂️',42,69,5,'pairs of scissors'),
+    E_('palette','🎨',66,73,5,'palettes'),E_('brush','🖌️',74,73,5,'brushes'),E_('pair of scissors','✂️',82,73,5,'pairs of scissors'),
+    E_('sink','🚰',92,48,6),B_('shelf',90,30,18,6,'#9b6a3c','shelves','🎨 🖍️','📚'),E_('window','🪟',10,26,9,'windows'),E_('plant','🌱',94,64,6)],
+  kw:['picture','easel','painting','teacher','table','palette','brush','scissors','sink','shelf','window','plant'],
+  facts:[{q:'Where is the art teacher?',o:['next to the easel','under the table','behind the sink'],why:'The art teacher is next to the easel.'},
+         {q:'Where are the pictures?',o:['on the wall','on the floor','on the table'],why:'The pictures are on the wall.'},
+         {q:'What is on the tables?',o:['palettes, brushes and scissors','books and bags','balls and mats'],why:'There are palettes, brushes and scissors on the tables.'},
+         {q:'Where is the sink?',o:['on the right','on the left','in the middle'],why:'The sink is on the right.'}],
+  model:"This is the art room. It is colourful and bright. There are three pictures on the wall. There is an easel with a painting on the left, and the art teacher is next to it. There are two tables in the room. There are two palettes, two brushes and two pairs of scissors on the tables. There is a sink on the right and a shelf above it. There is a window on the left and a plant in the corner. I like Art because I can paint."},
+ {id:'ict',n:'Компьютерный класс',en:'The computer room',e:'💻',wall:'#e8f1ff',floor:'#b9c4d9',split:40,
+  objs:[B_('screen',50,19,32,15,'#f5f7ff','screens','ICT','📺'),E_('projector','📽️',50,8,5),B_('table',27,50,32,6,'#8c7a66','tables','','🟫'),B_('table',73,50,32,6,'#8c7a66','tables'),B_('table',27,72,32,6,'#8c7a66','tables'),B_('table',73,72,32,6,'#8c7a66','tables'),
+    E_('computer','🖥️',18,45,6,'computers'),E_('computer','🖥️',34,45,6,'computers'),E_('computer','🖥️',66,45,6,'computers'),E_('computer','🖥️',82,45,6,'computers'),
+    E_('computer','🖥️',18,67,6,'computers'),E_('computer','🖥️',34,67,6,'computers'),E_('computer','🖥️',66,67,6,'computers'),E_('computer','🖥️',82,67,6,'computers'),
+    E_('chair','🪑',18,56,5,'chairs'),E_('chair','🪑',34,56,5,'chairs'),E_('chair','🪑',66,56,5,'chairs'),E_('chair','🪑',82,56,5,'chairs'),
+    E_('chair','🪑',18,78,5,'chairs'),E_('chair','🪑',34,78,5,'chairs'),E_('chair','🪑',66,78,5,'chairs'),E_('chair','🪑',82,78,5,'chairs'),
+    E_('printer','🖨️',93,32,6),E_('robot','🤖',93,90,7),E_('teacher','👩‍🏫',6,36,8),E_('clock','🕐',90,10,5)],
+  kw:['screen','projector','table','computer','chair','printer','robot','teacher','clock'],
+  facts:[{q:'Where is the printer?',o:['on the right, near the wall','under the table','behind the screen'],why:'The printer is on the right, near the wall.'},
+         {q:'Where is the projector?',o:['above the screen','under the screen','on the floor'],why:'The projector is above the screen.'},
+         {q:'Where is the teacher?',o:['on the left','on the right','in the middle'],why:'The teacher is on the left.'},
+         {q:'Where are the computers?',o:['on the tables','on the floor','on the chairs'],why:'The computers are on the tables.'}],
+  model:"This is the computer room. There are eight computers and eight chairs in the room. The computers are on two long tables. There is a big screen on the wall, and there is a projector above it. There is a printer on the right, and there is a robot near the right wall. The teacher is on the left. There is a clock on the wall. In ICT we write programs and look for information."},
+ {id:'yard',n:'Школьный двор',en:'The schoolyard',e:'🌳',wall:'#bfe6ff',floor:'#8ed081',split:46,
+  objs:[E_('school','🏫',50,24,16),E_('tree','🌳',12,38,9,'trees'),E_('tree','🌳',70,40,9,'trees'),E_('tree','🌳',90,36,9,'trees'),E_('sun','☀️',90,9,7),E_('cloud','☁️',20,9,8),
+    E_('goal','🥅',20,64,9),E_('football','⚽',30,74,4),B_('bench',50,58,18,4,'#9b6a3c','benches','','🟫'),
+    E_('child','🧒',42,72,6,'children'),E_('child','🧒',52,80,6,'children'),E_('child','🧒',62,72,6,'children'),
+    E_('bike','🚲',72,68,6,'bikes'),E_('bike','🚲',80,68,6,'bikes'),E_('bike','🚲',88,68,6,'bikes'),E_('school bus','🚌',12,88,9,'school buses'),E_('bin','🗑️',93,52,4)],
+  kw:['school','tree','sun','cloud','goal','football','bench','child','bike','bus','bin'],
+  facts:[{q:'Where is the school?',o:['at the back of the yard','on the left','under the tree'],why:'The school is at the back of the yard.'},
+         {q:'Where is the football goal?',o:['on the left','on the right','behind the school'],why:'The football goal is on the left.'},
+         {q:'Where are the bikes?',o:['on the right','in the goal','on the bench'],why:'The bikes are on the right.'},
+         {q:'Where is the school bus?',o:['in the corner, at the front','behind the school','in the tree'],why:'The school bus is in the corner, at the front.'}],
+  model:"This is our schoolyard. The school is at the back, and there are three trees near it. There is a football goal on the left, and there is a football between the goal and the children. Three children are playing in the middle. There is a bench near them. There are three bikes on the right, and there is a bin near the bikes. There is a school bus in the corner. The sun is bright and there is a cloud in the sky. It is a nice day."}
+];
+const NUMW=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+let curScene=0;
+SCENES.forEach((s,i)=>{
+  const c=document.createElement('div'); c.className='fchip'+(i===0?' on':''); c.style.setProperty('--red','#f28c28'); c.textContent=s.e+' '+s.n; c.onclick=()=>showScene(i); c.dataset.i=i; $('roomchips').appendChild(c);
+});
+const rnd=document.createElement('div'); rnd.className='fchip'; rnd.textContent='🎲 Случайная'; rnd.onclick=()=>showScene(Math.floor(Math.random()*SCENES.length)); $('roomchips').appendChild(rnd);
+
+function sceneStats(s){
+  const m={}; s.objs.forEach(o=>{ if(!m[o.n]) m[o.n]={n:o.n,c:0,e:o.t==='e'?o.e:(o.ic||'▫️'),p:o.p||(o.n+'s')}; m[o.n].c++; if(o.p) m[o.n].p=o.p; });
+  return Object.values(m);
+}
+function showScene(i){
+  curScene=i; const s=SCENES[i];
+  document.querySelectorAll('#roomchips .fchip').forEach((el,k)=>el.classList.toggle('on',el.dataset.i==i));
+  const st=sceneStats(s);
+  let objs='';
+  s.objs.forEach(o=>{
+    if(o.t==='e') objs+=`<div class="it" data-n="${o.n}" style="left:${o.x}%;top:${o.y}%;font-size:${o.s}cqw">${o.e}</div>`;
+    else objs+=`<div class="bx" data-n="${o.n}" style="left:${o.x}%;top:${o.y}%;width:${o.w}%;height:${o.h}%;background:${o.c}">${o.txt||''}</div>`;
+  });
+  $('roomBody').innerHTML=`
+   <div class="card">
+     <div class="task-head"><span class="n">1</span><h3>Рассмотри комнату: ${s.e} ${s.en}</h3></div>
+     <div class="stage" id="stage" style="background:linear-gradient(180deg,${s.wall} 0 ${s.split}%,${s.floor} ${s.split}% 100%)">${objs}</div>
+     <div class="row" style="margin-top:10px"><button class="btn sm" onclick="$('stage').classList.toggle('hints')">👁 Подписи к предметам</button><button class="btn sm ghost" onclick="showScene(Math.floor(Math.random()*SCENES.length))">🎲 Другая комната</button></div>
+     <p class="muted">Слова этой комнаты (×число — сколько таких предметов):</p>
+     <div class="bank">${st.map(x=>`<span class="chipw">${x.e} ${x.n}${x.c>1?' ×'+x.c:''} <button class="say" data-say="${x.n.replace(/"/g,'')}">🔊</button></span>`).join('')}</div>
+   </div>
+   <div class="card"><div class="task-head"><span class="n">2</span><h3>Ответь на вопросы</h3></div><div id="rq"></div></div>
+   <div class="card">
+     <div class="task-head"><span class="n">3</span><h3>Опиши комнату сам</h3></div>
+     <p class="muted">Пиши по-английски, минимум 6 предложений. Используй <b>there is / there are</b>, предлоги места, числа, цвета и слова комнаты. Справа от текста обновляется список проверки.</p>
+     <textarea class="write" id="wr" placeholder="This is ..." spellcheck="false"></textarea>
+     <div class="prog"><i id="wprog"></i></div>
+     <div class="muted" id="wmsg"></div>
+     <ul class="checklist" id="wlist"></ul>
+   </div>
+   <div class="card">
+     <div class="task-head"><span class="n">4</span><h3>Образец описания</h3></div>
+     <p class="muted">Сначала попробуй сам, а потом сравни.</p>
+     <div class="row"><button class="btn sm" onclick="$('model').classList.toggle('show')">Показать / скрыть образец</button><button class="btn sm ghost" id="msay">🔊 Прочитать вслух</button></div>
+     <div class="model" id="model">${s.model}</div>
+   </div>`;
+  const qs=s.facts.map(f=>({q:f.q,opts:f.o,a:0,why:f.why}));
+  const multi=st.filter(x=>x.c>=2&&x.c<=12&&!/^(sun|cloud)$/.test(x.n));
+  shuffle(multi).slice(0,2).forEach(x=>{
+    const opts=[x.c].concat([x.c+1,x.c-1,x.c+2].filter(v=>v>0&&v<=12)).slice(0,4);
+    qs.push({q:`How many ${x.p} are there in the picture?`,opts:opts.map(v=>NUMW[v]),a:0,why:`There ${x.c>1?'are':'is'} ${NUMW[x.c]} ${x.p} in the picture.`});
+  });
+  buildQuiz('rq',qs);
+  $('msay').onclick=()=>speak(s.model);
+  $('wr').addEventListener('input',()=>checkWriting(s));
+  checkWriting(s);
+}
+const ADJS=['big','small','large','tiny','tall','long','short','new','old','clean','dirty','tidy','messy','bright','dark','colourful','cosy','quiet','noisy','warm','cold','modern','red','blue','green','yellow','orange','purple','pink','brown','black','white','grey','open','busy','calm'];
+function checkWriting(s){
+  const raw=$('wr').value; const t=raw.toLowerCase().replace(/[’`]/g,"'");
+  const sentences=t.split(/[.!?]+/).filter(x=>x.trim().split(/\s+/).filter(Boolean).length>=3).length;
+  const has=re=>re.test(t);
+  const preps=['on the left','on the right','in front of','next to','in the middle','in the corner','at the back','at the front','behind','between','under','above','near','opposite','beside','on','in'];
+  const usedPreps=new Set(); preps.forEach(p=>{ if(new RegExp('\\b'+p+'\\b').test(t)) usedPreps.add(p); });
+  const kws=s.kw.filter(k=>new RegExp('\\b'+k+'\\w*').test(t));
+  const adjs=ADJS.filter(a=>new RegExp('\\b'+a+'\\b').test(t));
+  const crit=[
+   ['Минимум 6 предложений',sentences>=6,`сейчас: ${sentences}`],
+   ['Есть «there is …»',has(/\bthere is\b|\bthere's\b/),''],
+   ['Есть «there are …»',has(/\bthere are\b/),''],
+   ['Минимум 2 предлога места (on, in, under, next to, behind…)',usedPreps.size>=2,`найдено: ${usedPreps.size}`],
+   ['Минимум 5 слов этой комнаты',kws.length>=5,`найдено: ${kws.length}`],
+   ['Артикли: есть a / an и есть the',has(/\b(a|an)\s+\w+/)&&has(/\bthe\s+\w+/),''],
+   ['Числа или some / a lot of (two, three, six…)',has(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|some|many|a lot of|\d+)\b/),''],
+   ['Минимум 2 прилагательных (big, bright, green…)',adjs.length>=2,`найдено: ${adjs.length}`]
+  ];
+  const bonus=has(/\bi like\b|\bi love\b|\bmy favourite\b/);
+  const done=crit.filter(c=>c[1]).length;
+  $('wlist').innerHTML=crit.map(c=>`<li class="${c[1]?'done':''}">${c[1]?'✅':'⬜'} <span>${c[0]} <small style="opacity:.7">${c[2]}</small></span></li>`).join('')+`<li class="${bonus?'done':''}">${bonus?'🌟':'⭐'} <span>Бонус: твоё мнение (I like … because …)</span></li>`;
+  $('wprog').style.width=(done/crit.length*100)+'%';
+  let msg='';
+  if(!raw.trim()) msg='Начни с: This is …';
+  else if(!/[a-z]/.test(t)) msg='Пиши по-английски (латиницей) 🙂';
+  else if(done===crit.length) msg='🎉 Все пункты выполнены! Теперь открой образец и сравни.';
+  else msg=`Выполнено ${done} из ${crit.length}. Посмотри на невыполненные пункты.`;
+  $('wmsg').textContent=msg;
+}
+showScene(0);
+
+/* ================= INFINITE ARTICLES ================= */
+const OBJ=POOL.filter(it=>(it.art==='a'||it.art==='an')&&(it.sec==='case'||it.sec==='room'));
+const PEOPLE=POOL.filter(it=>(it.art==='a'||it.art==='an')&&it.sec==='people'&&!['friend','parent','student','first-grader'].includes(it.w));
+const PLACES=POOL.filter(it=>(it.art==='a'||it.art==='an')&&it.sec==='places');
+const STOCK=OBJ.filter(it=>it.sec==='case');
+const ADJ=[{w:'old',v:1,s:'«оу»'},{w:'easy',v:1,s:'«и»'},{w:'interesting',v:1,s:'«и»'},{w:'expensive',v:1,s:'«и»'},{w:'ugly',v:1,s:'«а»'},{w:'unusual',v:1,s:'«а»'},{w:'amazing',v:1,s:'«э»'},
+  {w:'new',v:0,s:'«н»'},{w:'big',v:0,s:'«б»'},{w:'small',v:0,s:'«с»'},{w:'nice',v:0,s:'«н»'},{w:'useful',v:0,s:'«ю» — согласный звук'},{w:'unique',v:0,s:'«ю» — согласный звук'}];
+const ROLES=[['teacher','a'],['headteacher','a'],['librarian','a'],['school nurse','a'],['cook','a'],['art teacher','an'],['English teacher','an'],['ICT teacher','an'],['PE teacher','a'],['maths teacher','a'],['music teacher','a'],['history teacher','a'],['Italian teacher','an']];
+const SPEC=[
+ {s:'We have ___ ICT lesson today.',ans:'an',why:'ICT читается «ай-си-ти» — первый звук гласный → an.'},
+ {s:'She is ___ PE teacher.',ans:'a',why:'PE читается «пи-и» — первый звук согласный → a.'},
+ {s:'It is ___ hour before the lesson.',ans:'an',why:'h в hour не читается → гласный звук → an.'},
+ {s:'We wear ___ uniform at school.',ans:'a',why:'uniform начинается со звука «ю» — согласный → a.'},
+ {s:'I have ___ exam on Friday.',ans:'an',why:'exam начинается с гласного звука → an.'},
+ {s:'Mrs Green is ___ honest teacher.',ans:'an',why:'h в honest не читается → an.'},
+ {s:'We have ___ art lesson on Monday.',ans:'an',why:'art начинается с гласного звука → an.'},
+ {s:'This is ___ European school.',ans:'a',why:'European начинается со звука «ю» — согласный → a.'},
+ {s:'We have ___ one-hour lesson.',ans:'a',why:'one читается «уан» — согласный звук → a.'},
+ {s:'It rains. Take ___ umbrella to school.',ans:'an',why:'umbrella начинается с гласного звука → an.'},
+ {s:'He is ___ A-grade pupil.',ans:'an',why:'A читается «эй» — гласный звук → an.'},
+ {s:'We have ___ Maths test today.',ans:'a',why:'Maths начинается с согласного звука → a.'}
+];
+const THE_S=[
+ {s:'Please close ___ door.',why:'Понятно, какая дверь (в этой комнате) → the.'},{s:'Look at ___ board, please.',why:'Мы оба видим доску → the.'},
+ {s:'Can I ask ___ teacher a question?',why:'Понятно, какой учитель (наш) → the.'},{s:'Our class is on ___ second floor.',why:'Порядковое число (second) → the.'},
+ {s:'Who is ___ best pupil in your class?',why:'Превосходная степень (best) → the.'},{s:'This is ___ biggest classroom in our school.',why:'Превосходная степень (biggest) → the.'},
+ {s:'Where is ___ library?',why:'Библиотека в нашей школе одна, понятно какая → the.'},{s:'Turn off ___ light, please.',why:'Понятно, какой свет (в этой комнате) → the.'},
+ {s:'Open ___ window, it is hot.',why:'Понятно, какое окно → the.'},{s:'Pass me ___ ruler, please.',why:'Конкретная линейка, которую мы оба видим → the.'},
+ {s:'I play ___ piano in Music.',why:'Музыкальные инструменты — с the.'},{s:'In Music we play ___ guitar.',why:'Музыкальные инструменты — с the.'},
+ {s:'I have PE in ___ afternoon.',why:'in the morning / afternoon / evening — с the.'},{s:'Let\'s go to ___ cinema after school.',why:'Привычное место в городе → the cinema.'},
+ {s:'Who is ___ first on the list?',why:'Порядковое число (first) → the.'},{s:'We are in ___ same class.',why:'Слово same («тот же самый») → the.'}
+].map(x=>Object.assign({ans:'the'},x));
+const ZERO_S=[
+ {s:'My favourite subject is ___ History.',why:'Школьные предметы — без артикля.'},{s:'We have ___ English on Monday.',why:'Предметы — без артикля.'},
+ {s:'I go to ___ school by bus.',why:'go to school — устойчивое выражение без артикля.'},{s:'My little sister is at ___ school now.',why:'at school — без артикля.'},
+ {s:'We are in ___ class now.',why:'in class — без артикля.'},{s:'Let\'s play ___ football at break.',why:'Спортивные игры — без артикля.'},
+ {s:'I do ___ homework after lunch.',why:'do homework — без артикля (неисчисляемое).'},{s:'We have ___ lunch in the canteen.',why:'Приёмы пищи — без артикля.'},
+ {s:'I go home by ___ bus.',why:'by + транспорт — без артикля.'},{s:'After ___ school I go to a club.',why:'after school — без артикля.'},
+ {s:'On ___ Friday we have a test.',why:'Дни недели — без артикля.'},{s:'___ Pupils must wear a uniform.',why:'Говорим обо всех учениках вообще (мн. число) → без артикля.'},
+ {s:'We play ___ chess at the club.',why:'Игры — без артикля.'},{s:'See you at ___ break!',why:'at break — без артикля.'},
+ {s:'I am at ___ home today because I am ill.',why:'at home — без артикля.'},{s:'She speaks ___ French at home.',why:'Языки — без артикля.'}
+].map(x=>Object.assign({ans:'Ø'},x));
+const A_FIX=[
+ {s:'We have ___ break at eleven.',why:'have a break — устойчивое выражение.'},{s:'I have ___ lot of homework.',why:'a lot of — устойчивое выражение.'},
+ {s:'What ___ difficult test!',why:'What + a + прилагательное + ед. число.'},{s:'It is ___ great school!',why:'Первое упоминание, ед. число → a.'},
+ {s:'Can I have ___ piece of chalk?',why:'a piece of — «один кусок» → a.'},{s:'She is ___ good pupil.',why:'Профессия / кто это → a.'},
+ {s:'I need ___ pair of scissors.',why:'a pair of — «одна пара» → a.'},{s:'He is in ___ hurry: the bell is ringing!',why:'in a hurry — устойчивое выражение.'}
+].map(x=>Object.assign({ans:'a'},x));
+const GENS=[
+ {n:'pencils',spec:'___ pencils on my desk are blue.'},{n:'books',spec:'___ books in the library are old.'},{n:'pupils',spec:'___ pupils in our class are friendly.'},
+ {n:'windows',spec:'___ windows in our classroom are big.'},{n:'desks',spec:'___ desks in the corridor are new.'},{n:'teachers',spec:'___ teachers in our school are kind.'},
+ {n:'chairs',spec:'___ chairs near the board are green.'},{n:'notebooks',spec:'___ notebooks on the table are mine.'},{n:'lessons',spec:'___ lessons on Monday are long.'},{n:'maps',spec:'___ maps on the wall are old.'}
+];
+const tagOf=a=>(a==='a'||a==='an')?'a':(a==='the'?'the':'zero');
+const byTag=(arr,w)=>w?arr.filter(x=>tagOf(x.ans)===w):arr;
+function gFirst(){
+  const r=Math.random(); let it,s;
+  if(r<.5){it=pick(OBJ); s=`Look! There is ___ ${nm(it)} in our classroom.`;}
+  else if(r<.75){it=pick(PEOPLE); s=`There is ___ ${nm(it)} in the corridor.`;}
+  else{it=pick(PLACES); s=`We have ___ ${nm(it)} in our school.`;}
+  return {s,ans:it.art,opts:ARTS,why:`Первое упоминание — «какой-то» ${nm(it)}. ${nm(it)} начинается с ${it.art==='an'?'гласного':'согласного'} звука → ${it.art}.`};
+}
+function gSecond(){ const it=pick(STOCK);
+  return {s:`I have ${it.art} ${nm(it)}. ___ ${nm(it)} is new.`,ans:'the',opts:ARTS,why:`Второе упоминание: ${nm(it)} мы уже назвали, теперь он «знакомый» → the.`}; }
+function gSound(){
+  if(Math.random()<.5){ const x=pick(SPEC); return {s:x.s,ans:x.ans,opts:['a','an'],why:x.why}; }
+  const adj=pick(ADJ), it=pick(STOCK), ans=adj.v?'an':'a';
+  return {s:`I have got ___ ${adj.w} ${nm(it)}.`,ans,opts:['a','an'],why:`${adj.w} начинается с ${adj.v?'гласного':'согласного'} звука (${adj.s}) → ${ans}. Смотрим на слово сразу после артикля!`};
+}
+function gRole(){ const [n,a]=pick(ROLES);
+  return {s:pick([`Mr Brown is ___ ${n}.`,`She wants to be ___ ${n}.`,`My aunt is ___ ${n}.`]),ans:a,opts:ARTS,why:`Профессия после to be — a/an. ${n} → ${a} (по первому звуку).`}; }
+function gThe(){ const x=pick(THE_S); return {s:x.s,ans:'the',opts:ARTS,why:x.why}; }
+function gZero(){ const x=pick(ZERO_S); return {s:x.s,ans:'Ø',opts:ARTS,why:x.why}; }
+function gAfix(){ const x=pick(A_FIX); return {s:x.s,ans:'a',opts:ARTS,why:x.why}; }
+function gGeneral(want){
+  const g=pick(GENS); const kind=want==='zero'?'gen':want==='the'?'spec':(Math.random()<.5?'gen':'spec');
+  if(kind==='gen') return {s:pick([`I like ___ ${g.n}.`,`My friend loves ___ ${g.n}.`,`Do you like ___ ${g.n}?`]),ans:'Ø',opts:ARTS,why:`Говорим о ${g.n} вообще (мн. число) → без артикля.`};
+  return {s:g.spec,ans:'the',opts:ARTS,why:'Уточнили, какие именно (on my desk, in the library…) → the.'};
+}
+let filt='all',lastS='';
+function genQ(){
+  const sets={
+    all:[gFirst,gSecond,gSound,gRole,gThe,gZero,gAfix,()=>gGeneral()],
+    a:[gFirst,gSound,gRole,gAfix],
+    the:[gSecond,gThe,()=>gGeneral('the')],
+    zero:[gZero,()=>gGeneral('zero')]
+  };
+  let q,tries=0; do{q=pick(sets[filt])(); tries++;}while(q.s===lastS&&tries<6); lastS=q.s; return q;
+}
+let iScore=0,iTotal=0,iStreak=0,iBest=0,goal=20;
+function drawBars(){const b=$('bars'); b.innerHTML=''; for(let i=0;i<goal;i++){const s=document.createElement('span'); if(i<Math.min(iStreak,goal)) s.className='lit'; b.appendChild(s);}}
+function setGoal(){goal=+$('goalSel').value; drawBars(); updBanner();}
+function updBanner(){const bn=$('banner'); if(iStreak>=goal){bn.className='banner show'; bn.textContent=`🏆 Цель достигнута: ${iStreak} подряд без ошибок! Можно продолжать, рекорд растёт.`;} else bn.className='banner';}
+function nextInf(){
+  const q=genQ(); const box=$('iq'); box.innerHTML='';
+  const wrap=document.createElement('div'); wrap.className='quiz-q';
+  const qt=document.createElement('div'); qt.className='qtext'; qt.innerHTML=q.s.replace('___','<span class="gap">&nbsp;&nbsp;&nbsp;</span>');
+  const ob=document.createElement('div'); ob.className='opts'; const fb=document.createElement('div'); fb.className='fb';
+  q.opts.forEach(op=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=label(op);
+    b.onclick=()=>{
+      ob.querySelectorAll('.opt').forEach(x=>x.disabled=true); iTotal++; const full=fill(q.s,q.ans);
+      if(op===q.ans){b.classList.add('ok'); iScore++; iStreak++; if(iStreak>iBest) iBest=iStreak; fb.className='fb show ok'; fb.textContent=`✅ Верно! ${full} — ${q.why}`;}
+      else{b.classList.add('bad'); ob.querySelectorAll('.opt').forEach(x=>{if(x.textContent===label(q.ans)) x.classList.add('ok');}); iStreak=0; fb.className='fb show bad'; fb.textContent=`❌ Серия сбита. Правильно: ${full} — ${q.why}`;}
+      $('iScore').textContent=iScore; $('iTotal').textContent=iTotal; $('iStreak').textContent=iStreak; $('iBest').textContent=iBest; drawBars(); updBanner();
+    };
+    ob.appendChild(b);
+  });
+  wrap.append(qt,ob,fb); box.appendChild(wrap);
+}
+function resetInf(){iScore=iTotal=iStreak=iBest=0; ['iScore','iTotal','iStreak','iBest'].forEach(id=>$(id).textContent=0); drawBars(); updBanner(); nextInf();}
+[['all','Все темы'],['a','A / An'],['the','The'],['zero','Zero Ø']].forEach(([k,l])=>{
+  const c=document.createElement('div'); c.className='fchip'+(k==='all'?' on':''); c.textContent=l;
+  c.onclick=()=>{filt=k; document.querySelectorAll('#filters .fchip').forEach(x=>x.classList.remove('on')); c.classList.add('on'); nextInf();};
+  $('filters').appendChild(c);
+});
+
+/* init */
+buildTraining(); drawBars(); nextInf(); goTo(0);
+</script>
+</body>
+</html>
